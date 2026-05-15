@@ -1,0 +1,69 @@
+# ============================================
+# KAKAMPI - .gitignore file
+# ============================================
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment Variables (IMPORTANTE!)
+.env
+.env.local
+.env.*.local
+
+# Node modules (kung gagamit ka ng npm)
+node_modules/
+package-lock.json
+
+# Build folders
+dist/
+build/
+out/
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# Backup files
+*.bak
+*.backup
+
+# IDE folders
+.vscode/
+.idea/
+
+# Mac files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Uploaded images (kung meron kang user-uploaded images)
+uploads/
+images/temp/
+
+# Database files (wag i-upload ang local database)
+*.sql
+*.db
+*.sqlite
+
+# Your local configuration (kung meron)
+config.local.js
+config.local.css
