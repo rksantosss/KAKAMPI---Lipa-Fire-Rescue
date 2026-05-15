@@ -1,0 +1,704 @@
+/* ========== KAKAMPI FIRE RESCUE SYSTEM ========== */
+/* Global Reset & Base Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f97316 0%, #dc2626 50%, #b91c1c 100%);
+    font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    position: relative;
+}
+
+/* ========== GLASS CARD COMPONENT ========== */
+.glass-card {
+    max-width: 600px;
+    width: 100%;
+    background: rgba(255, 248, 225, 0.96);
+    backdrop-filter: blur(8px);
+    border-radius: 2rem;
+    padding: 28px 24px 32px;
+    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 200, 0.8);
+    border: 2px solid #ffdd99;
+    transition: all 0.2s ease;
+    margin: 0 auto;
+}
+
+/* ========== AUTH TOGGLE BUTTONS ========== */
+.auth-toggle {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    background: #ffedd5;
+    border-radius: 60px;
+    padding: 4px;
+    border: 1px solid #fdba74;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    border-radius: 60px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #9a3412;
+    text-align: center;
+}
+
+.toggle-btn.active {
+    background: radial-gradient(circle at 30% 20%, #ff8c42, #e65c1e);
+    color: white;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.5);
+}
+
+/* ========== LOGIN & REGISTER CONTAINERS ========== */
+.login-container,
+.register-container {
+    text-align: center;
+    width: 100%;
+}
+
+.register-container {
+    display: none;
+}
+
+.logo-icon {
+    font-size: 3.2rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.login-title {
+    font-size: 2rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ea580c, #dc2626, #f97316);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 4px;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+.sub {
+    color: #b45309;
+    font-size: 0.75rem;
+    margin-bottom: 28px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* ========== INPUT FIELDS ========== */
+.input-group {
+    margin-bottom: 18px;
+    text-align: left;
+    width: 100%;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #c2410c;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 14px 16px;
+    background: #fff7ed;
+    border: 2px solid #fdba74;
+    border-radius: 60px;
+    font-size: 1rem;
+    color: #431407;
+    outline: none;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px #fed7aa;
+}
+
+/* ========== BUTTONS ========== */
+.login-btn,
+.register-btn {
+    width: 100%;
+    padding: 14px;
+    background: radial-gradient(circle at 30% 20%, #f97316, #dc2626);
+    border: none;
+    border-radius: 60px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: 0.1s;
+    text-align: center;
+    box-shadow: 0 6px 14px rgba(220, 38, 38, 0.3);
+}
+
+.login-btn:active,
+.register-btn:active {
+    transform: scale(0.97);
+}
+
+/* ========== MESSAGES ========== */
+.error-msg,
+.register-error-msg {
+    color: #b91c1c;
+    font-size: 0.75rem;
+    margin-top: 16px;
+    background: #fee2e2;
+    padding: 8px;
+    border-radius: 50px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.success-msg {
+    color: #15803d;
+    background: #dcfce7;
+}
+
+/* ========== DEMO HINT ========== */
+.demo-hint {
+    margin-top: 24px;
+    background: #ffedd5;
+    padding: 12px;
+    border-radius: 28px;
+    font-size: 0.7rem;
+    color: #9a3412;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #fed7aa;
+}
+
+/* ========== SWITCH LINK ========== */
+.switch-link {
+    margin-top: 20px;
+    font-size: 0.75rem;
+    color: #ea580c;
+    text-align: center;
+    font-weight: 600;
+}
+
+.switch-link span {
+    color: #dc2626;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+/* ========== MAIN APP STYLES ========== */
+.main-app {
+    display: none;
+    width: 100%;
+}
+
+/* Header */
+.kakampi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #fdba74;
+}
+
+.city-title h2 {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #c2410c;
+}
+
+.city-title p {
+    font-size: 0.65rem;
+    color: #ea580c;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.kakampi-badge {
+    background: #fed7aa;
+    color: #9a3412;
+    padding: 6px 14px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border: 1px solid #fdba74;
+}
+
+/* User Info Bar */
+.user-info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    background: #ffedd5;
+    padding: 8px 16px;
+    border-radius: 60px;
+    border: 1px solid #fed7aa;
+}
+
+.user-badge {
+    font-size: 0.8rem;
+    color: #b45309;
+    font-weight: 700;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-size: 0.7rem;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.role-badge {
+    display: inline-block;
+    background: #f97316;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.6rem;
+    margin-left: 6px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Live Panel */
+.live-panel {
+    background: #fff7ed;
+    border-radius: 60px;
+    padding: 10px 18px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.8rem;
+    border-left: 8px solid #f97316;
+    border-right: 1px solid #fed7aa;
+}
+
+.location-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #9a3412;
+    font-weight: 800;
+}
+
+.fire-risk {
+    background: #fee2e2;
+    padding: 4px 14px;
+    border-radius: 32px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #b91c1c;
+}
+
+.live-clock {
+    font-family: monospace;
+    background: #fef3c7;
+    padding: 4px 12px;
+    border-radius: 32px;
+    font-weight: 800;
+    color: #dc2626;
+}
+
+/* SOS Button Area */
+.fire-sos-area {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 20px;
+}
+
+.fire-core {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fire-alert-btn {
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle at 35% 30%, #ff7b2c, #e6451c);
+    color: white;
+    font-size: 58px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    cursor: pointer;
+    box-shadow: 0 0 50px rgba(249, 115, 22, 0.8), 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s ease;
+    font-family: 'Inter', sans-serif;
+    text-shadow: 0 2px 12px black;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+}
+
+.fire-alert-btn small {
+    font-size: 0.85rem;
+    margin-top: 8px;
+}
+
+.fire-alert-btn:active {
+    transform: scale(0.94);
+}
+
+/* Flame Ring Animation */
+.flame-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: rgba(249, 115, 22, 0.5);
+    pointer-events: none;
+    animation: flameRadar 1.6s infinite;
+    z-index: 1;
+}
+
+.flame-ring.delay {
+    animation: flameRadar 1.6s infinite 0.6s;
+    opacity: 0.6;
+}
+
+@keyframes flameRadar {
+    0% {
+        width: 260px;
+        height: 260px;
+        opacity: 0.9;
+        background: rgba(249, 115, 22, 0.7);
+    }
+    100% {
+        width: 400px;
+        height: 400px;
+        opacity: 0;
+        background: rgba(220, 38, 38, 0);
+    }
+}
+
+/* Alert Feedback */
+.alert-feedback {
+    background: #fff7ed;
+    border-radius: 48px;
+    padding: 14px 18px;
+    margin: 5px 0 20px;
+    text-align: center;
+    border: 1px solid #fed7aa;
+}
+
+#fireStatusMsg {
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    color: #c2410c;
+    text-align: center;
+}
+
+/* Hotlines Grid */
+.hotlines-grid {
+    background: #fff7ed;
+    border-radius: 2rem;
+    padding: 16px 14px;
+    margin: 18px 0 14px;
+    border: 1px solid #fed7aa;
+}
+
+.section-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-align: center;
+    color: #ea580c;
+    margin-bottom: 14px;
+}
+
+.contact-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.hotline-card {
+    background: #fef3c7;
+    padding: 10px 12px;
+    border-radius: 80px;
+    min-width: 110px;
+    text-align: center;
+    border: 2px solid #fdba74;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.hotline-card:active {
+    background: #fed7aa;
+    transform: scale(0.97);
+}
+
+.hotline-name {
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: #c2410c;
+}
+
+.hotline-number {
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #9a3412;
+    margin-top: 4px;
+}
+
+/* Incident Log */
+.incident-log {
+    margin-top: 20px;
+    background: #fff7ed;
+    border-radius: 1.8rem;
+    padding: 12px 14px;
+    border: 1px solid #fed7aa;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.log-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #ea580c;
+}
+
+.clear-log {
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-size: 0.7rem;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#fireHistoryList {
+    list-style: none;
+    max-height: 145px;
+    overflow-y: auto;
+    font-size: 0.7rem;
+}
+
+#fireHistoryList li {
+    padding: 7px 0;
+    border-bottom: 1px solid #fed7aa;
+    display: flex;
+    gap: 8px;
+    font-family: monospace;
+    color: #78350f;
+}
+
+.log-time {
+    color: #f97316;
+    min-width: 68px;
+    font-weight: bold;
+}
+
+/* Database Stats */
+.db-stats {
+    background: #ffedd5;
+    border-radius: 20px;
+    padding: 8px 12px;
+    margin-top: 12px;
+    font-size: 0.65rem;
+    display: flex;
+    justify-content: space-between;
+    color: #b45309;
+    font-weight: bold;
+}
+
+/* Footer */
+.kakampi-footer {
+    text-align: center;
+    font-size: 0.6rem;
+    color: #c2410c;
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px dashed #fdba74;
+    font-weight: 600;
+}
+
+/* ========== MANUAL BUTTON & PANEL ========== */
+.manual-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #f97316;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 18px;
+    font-weight: bold;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 100;
+    font-family: monospace;
+    transition: 0.2s;
+}
+
+.manual-btn:hover {
+    background: #dc2626;
+    transform: scale(1.02);
+}
+
+.manual-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.manual-card {
+    max-width: 520px;
+    width: 100%;
+    background: #fff9ef;
+    border-radius: 2rem;
+    padding: 24px;
+    border: 3px solid #fdba74;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+}
+
+.manual-card h2 {
+    color: #c2410c;
+    border-left: 8px solid #f97316;
+    padding-left: 16px;
+    margin-bottom: 16px;
+}
+
+.manual-card h3 {
+    margin: 18px 0 6px 0;
+    color: #b45309;
+}
+
+.manual-card p,
+.manual-card li {
+    font-size: 0.85rem;
+    color: #431407;
+    line-height: 1.4;
+}
+
+.manual-card ul {
+    padding-left: 24px;
+    margin: 8px 0;
+}
+
+.close-manual {
+    background: #dc2626;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* ========== ANIMATIONS ========== */
+.critical-glow {
+    animation: emergencyFlash 0.5s ease-in-out 2;
+}
+
+@keyframes emergencyFlash {
+    0% {
+        box-shadow: 0 0 0 0 #ff8c42;
+    }
+    50% {
+        box-shadow: 0 0 0 12px rgba(249, 115, 22, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 0 0 #ff8c42;
+    }
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 500px) {
+    .fire-alert-btn {
+        width: 200px;
+        height: 200px;
+        font-size: 44px;
+    }
+    
+    .flame-ring {
+        width: 220px;
+        height: 220px;
+    }
+    
+    @keyframes flameRadar {
+        0% {
+            width: 210px;
+            height: 210px;
+        }
+        100% {
+            width: 310px;
+            height: 310px;
+        }
+    }
+    
+    .hotline-card {
+        min-width: 95px;
+        padding: 7px 6px;
+    }
+    
+    .manual-btn {
+        bottom: 12px;
+        right: 12px;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+}
