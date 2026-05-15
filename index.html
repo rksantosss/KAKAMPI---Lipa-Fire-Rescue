@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Kakampi · Lipa City Fire Rescue  | Bright Edition + Manual</title>
+    <title>Kakampi · Lipa City Fire Rescue | Bright Edition + Clickable Stats</title>
     <style>
         * {
             margin: 0;
@@ -406,6 +406,8 @@
         }
         #fireHistoryList li { padding: 7px 0; border-bottom: 1px solid #fed7aa; display: flex; gap: 8px; font-family: monospace; color: #78350f; }
         .log-time { color: #f97316; min-width: 68px; font-weight: bold; }
+        
+        /* Clickable Stats Styles */
         .db-stats {
             background: #ffedd5;
             border-radius: 20px;
@@ -417,6 +419,146 @@
             color: #b45309;
             font-weight: bold;
         }
+        
+        .db-stats span {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 4px 8px;
+            border-radius: 20px;
+            background: rgba(255, 237, 213, 0.5);
+        }
+        
+        .db-stats span:hover {
+            background: #fed7aa;
+            transform: scale(1.02);
+        }
+        
+        .db-stats span:active {
+            transform: scale(0.98);
+        }
+        
+        /* Stats Modal Popup */
+        .stats-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .stats-modal-content {
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(135deg, #fff9ef 0%, #ffedd5 100%);
+            border-radius: 2rem;
+            padding: 24px;
+            border: 3px solid #fdba74;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stats-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #fdba74;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .stats-modal-header h3 {
+            color: #c2410c;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        
+        .close-stats-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #dc2626;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        
+        .close-stats-modal:hover {
+            transform: scale(1.1);
+            color: #b91c1c;
+        }
+        
+        .stats-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .stats-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-left: 6px solid #f97316;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stats-item-title {
+            font-weight: 800;
+            color: #9a3412;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        
+        .stats-item-detail {
+            font-size: 0.75rem;
+            color: #78350f;
+            font-family: monospace;
+            word-break: break-word;
+        }
+        
+        .stats-badge {
+            display: inline-block;
+            background: #f97316;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            margin-left: 8px;
+        }
+        
+        .empty-stats {
+            text-align: center;
+            color: #b45309;
+            padding: 40px;
+            font-style: italic;
+        }
+        
+        .stats-footer {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #fdba74;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #9a3412;
+        }
+        
         .kakampi-footer {
             text-align: center;
             font-size: 0.6rem;
@@ -541,7 +683,7 @@
         <p>After login, your <span style="background:#fed7aa;">badge</span> shows role (Resident/Responder/BFP Personnel) and barangay. The live panel shows real time clock and fire risk indicator (HIGH between 10am–3pm, LOW at night).</p>
         
         <h3> 6. Logout & Multi-Account</h3>
-        <p>Click <strong>Logout</strong> at top right to return to login screen. Multiple users can register and each action identifies the user’s role and barangay in incident records.</p>
+        <p>Click <strong>Logout</strong> at top right to return to login screen. Multiple users can register and each action identifies the user's role and barangay in incident records.</p>
 
         <h3> 7. Tips & Notifications</h3>
         <ul>
@@ -632,12 +774,12 @@
     </div>
     
     <div class="user-info-bar">
-        <span class="user-badge"> <span id="loggedUserName">Responder</span> <span id="userRoleBadge" class="role-badge"></span> |  <span id="userBarangayDisplay"></span></span>
+        <span class="user-badge">  <span id="loggedUserName">Responder</span> <span id="userRoleBadge" class="role-badge"></span> |  <span id="userBarangayDisplay"></span></span>
         <button class="logout-btn" id="logoutBtn"> Logout</button>
     </div>
 
     <div class="live-panel">
-        <div class="location-area"><span id="lipaLocation">Lipa City, Batangas</span></div>
+        <div class="location-area"> <span id="lipaLocation">Lipa City, Batangas</span></div>
         <div class="fire-risk" id="fireRiskBadge"> Fire Danger: MODERATE</div>
         <div class="live-clock" id="kakampiClock">--:--:--</div>
     </div>
@@ -654,7 +796,7 @@
     </div>
 
     <div class="alert-feedback">
-        <div id="fireStatusMsg"><span>KAKAMPI READY · Lipa City Fire Watch Active</span></div>
+        <div id="fireStatusMsg"> <span>KAKAMPI READY · Lipa City Fire Watch Active</span></div>
     </div>
 
     <div class="hotlines-grid">
@@ -678,7 +820,7 @@
     <div class="incident-log">
         <div class="log-header">
             <span class="log-title"> KAKAMPI INCIDENT LOG · LIPA CITY</span>
-            <button class="clear-log" id="clearFireLog">clear log</button>
+            <button class="clear-log" id="clearFireLog"> clear log</button>
         </div>
         <ul id="fireHistoryList">
             <li><span class="log-time"> system</span> <span> KAKAMPI system ready · Database connected</span></li>
@@ -686,13 +828,29 @@
     </div>
     
     <div class="db-stats">
-        <span> Total Incidents: <span id="dbIncidentCount">0</span></span>
-        <span> Total Users: <span id="dbUserCount">0</span></span>
+        <span id="clickableIncidents">  Total Incidents: <span id="dbIncidentCount">0</span> <span style="font-size:0.6rem;">▼</span></span>
+        <span id="clickableUsers">  Total Users: <span id="dbUserCount">0</span> <span style="font-size:0.6rem;">▼</span></span>
     </div>
     
     <div class="kakampi-footer">
          "KAKAMPI" means partner/ally — uniting Lipa City residents & responders.<br>
          Tap SOS for fire emergencies. All actions are logged in the database.
+    </div>
+</div>
+
+<!-- Stats Modal Popup -->
+<div id="statsModal" class="stats-modal">
+    <div class="stats-modal-content">
+        <div class="stats-modal-header">
+            <h3 id="statsModalTitle"> KAKAMPI Statistics</h3>
+            <button class="close-stats-modal" id="closeStatsModal">&times;</button>
+        </div>
+        <div id="statsModalBody" class="stats-list">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+        <div class="stats-footer">
+            Tap outside or press ✕ to close
+        </div>
     </div>
 </div>
 
@@ -702,13 +860,15 @@
         if (!localStorage.getItem('kakampi_incidents')) localStorage.setItem('kakampi_incidents', JSON.stringify([]));
         if (!localStorage.getItem('kakampi_users')) {
             const defaultUsers = [
-                { id: 1, fullname: "Resident User", username: "resident", password: "fire123", barangay: "Barangay Inosluban", role: "Resident", contact: "", createdAt: new Date().toISOString() },
-                { id: 2, fullname: "Barangay Fire Aide", username: "kakampi", password: "lipafire", barangay: "Barangay Centro", role: "Responder", contact: "", createdAt: new Date().toISOString() },
-                { id: 3, fullname: "BFP Officer Lipa", username: "bfp.lipa", password: "rescue143", barangay: "Lipa Central Station", role: "BFP Personnel", contact: "", createdAt: new Date().toISOString() }
+                { id: 1, fullname: "Resident User", username: "resident", password: "fire123", barangay: "Barangay Inosluban", role: "Resident", contact: "09123456789", createdAt: new Date().toISOString() },
+                { id: 2, fullname: "Barangay Fire Aide", username: "kakampi", password: "lipafire", barangay: "Barangay Centro", role: "Responder", contact: "09234567890", createdAt: new Date().toISOString() },
+                { id: 3, fullname: "BFP Officer Lipa", username: "bfp.lipa", password: "rescue143", barangay: "Lipa Central Station", role: "BFP Personnel", contact: "09345678901", createdAt: new Date().toISOString() }
             ];
             localStorage.setItem('kakampi_users', JSON.stringify(defaultUsers));
         }
+        setupModalClickOutside();
     }
+    
     function getIncidents() { return JSON.parse(localStorage.getItem('kakampi_incidents')) || []; }
     function getUsers() { return JSON.parse(localStorage.getItem('kakampi_users')) || []; }
     function saveIncident(incident) { const incidents = getIncidents(); incidents.unshift(incident); localStorage.setItem('kakampi_incidents', JSON.stringify(incidents)); updateStats(); }
@@ -719,7 +879,8 @@
     
     let currentUser = null;
     let alertCooldown = false;
-    function addKakampiLog(entryType, details, icon) {
+    
+    function addKakampiLog(entryType, details, icon ) {
         const timestamp = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', second:'2-digit' });
         const incidentRecord = { id: Date.now(), timestamp, fullDate: new Date().toLocaleString(), entryType, details, icon, user: currentUser ? currentUser.username : "system", role: currentUser ? currentUser.role : "Kakampi", barangay: currentUser ? currentUser.barangay : "Lipa City" };
         saveIncident(incidentRecord);
@@ -732,6 +893,7 @@
             while(historyList.children.length > 35) historyList.removeChild(historyList.lastChild);
         }
     }
+    
     function loadIncidentHistory(){
         const incidents = getIncidents();
         const historyList = document.getElementById('fireHistoryList');
@@ -742,7 +904,151 @@
         }
         updateStats();
     }
+    
     function clearIncidentDatabase(){ if(confirm("Clear ALL incident records?")){ localStorage.setItem('kakampi_incidents', JSON.stringify([])); loadIncidentHistory(); addKakampiLog("SYSTEM", "Incident database cleared"); } }
+    
+    // ========== CLICKABLE STATS FUNCTIONS ==========
+    function showIncidentDetails() {
+        const incidents = getIncidents();
+        const modal = document.getElementById('statsModal');
+        const modalTitle = document.getElementById('statsModalTitle');
+        const modalBody = document.getElementById('statsModalBody');
+        
+        modalTitle.innerHTML = ' INCIDENT LOG DETAILS';
+        
+        if (incidents.length === 0) {
+            modalBody.innerHTML = '<div class="empty-stats">📭 No incidents recorded yet.<br>Tap SOS to create your first incident.</div>';
+        } else {
+            let html = `<div style="margin-bottom: 12px; text-align: center; background:#fff7ed; padding:8px; border-radius:12px;">
+                            <strong>Total Incidents:</strong> ${incidents.length} 
+                            <span class="stats-badge">Active Logs</span>
+                        </div>`;
+            
+            incidents.slice(0, 20).forEach((inc, index) => {
+                html += `
+                    <div class="stats-item">
+                        <div class="stats-item-title">
+                             #${incidents.length - index} • ${inc.entryType} 
+                            <span class="stats-badge">${inc.role || 'System'}</span>
+                        </div>
+                        <div class="stats-item-detail">
+                             ${inc.timestamp} |  ${inc.barangay || 'Lipa City'}<br>
+                             ${inc.details}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (incidents.length > 20) {
+                html += `<div style="text-align:center; padding:12px; color:#9a3412; font-size:0.7rem;">
+                            + ${incidents.length - 20} more incidents. Check full log above.
+                        </div>`;
+            }
+            modalBody.innerHTML = html;
+        }
+        
+        modal.style.display = 'flex';
+    }
+    
+    function showUserDetails() {
+        const users = getUsers();
+        const modal = document.getElementById('statsModal');
+        const modalTitle = document.getElementById('statsModalTitle');
+        const modalBody = document.getElementById('statsModalBody');
+        
+        modalTitle.innerHTML = ' REGISTERED USERS';
+        
+        if (users.length === 0) {
+            modalBody.innerHTML = '<div class="empty-stats"> No registered users yet.<br>Register a new account to get started.</div>';
+        } else {
+            let html = `<div style="margin-bottom: 12px; text-align: center; background:#fff7ed; padding:8px; border-radius:12px;">
+                            <strong>Total Users:</strong> ${users.length} 
+                            <span class="stats-badge">Registered Accounts</span>
+                        </div>`;
+            
+            const residents = users.filter(u => u.role === 'Resident');
+            const responders = users.filter(u => u.role === 'Responder');
+            const bfp = users.filter(u => u.role === 'BFP Personnel');
+            
+            html += `
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                        <span style="background:#10b981; color:white; padding:4px 12px; border-radius:20px;"> Residents: ${residents.length}</span>
+                        <span style="background:#f59e0b; color:white; padding:4px 12px; border-radius:20px;"> Responders: ${responders.length}</span>
+                        <span style="background:#ef4444; color:white; padding:4px 12px; border-radius:20px;"> BFP: ${bfp.length}</span>
+                    </div>
+                </div>
+            `;
+            
+            users.forEach((user, index) => {
+                let roleIcon = '';
+                if (user.role === 'Resident') roleIcon ;
+                else if (user.role === 'Responder') roleIcon ;
+                else roleIcon ;
+                
+                html += `
+                    <div class="stats-item">
+                        <div class="stats-item-title">
+                            ${roleIcon} ${user.fullname || user.username}
+                            <span class="stats-badge">${user.role}</span>
+                        </div>
+                        <div class="stats-item-detail">
+                             @${user.username}<br>
+                             ${user.barangay}<br>
+                             ${user.contact || 'No contact provided'}<br>
+                             Joined: ${new Date(user.createdAt).toLocaleDateString()}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            modalBody.innerHTML = html;
+        }
+        
+        modal.style.display = 'flex';
+    }
+    
+    function closeStatsModal() {
+        const modal = document.getElementById('statsModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+    
+    function setupModalClickOutside() {
+        const modal = document.getElementById('statsModal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeStatsModal();
+                }
+            });
+        }
+    }
+    
+    function setupClickableStats() {
+        const incidentsSpan = document.getElementById('clickableIncidents');
+        const usersSpan = document.getElementById('clickableUsers');
+        const closeBtn = document.getElementById('closeStatsModal');
+        
+        if (incidentsSpan) {
+            incidentsSpan.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showIncidentDetails();
+            });
+        }
+        
+        if (usersSpan) {
+            usersSpan.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showUserDetails();
+            });
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeStatsModal);
+        }
+    }
     
     function initMainApp() {
         loadIncidentHistory();
@@ -751,6 +1057,7 @@
         const clearLogBtn = document.getElementById('clearFireLog');
         const clockSpan = document.getElementById('kakampiClock');
         const riskBadge = document.getElementById('fireRiskBadge');
+        
         function updateClock(){
             const now = new Date(); const hrs = now.getHours().toString().padStart(2,'0'); const mins = now.getMinutes().toString().padStart(2,'0'); const secs = now.getSeconds().toString().padStart(2,'0');
             if(clockSpan) clockSpan.textContent = `${hrs}:${mins}:${secs}`;
@@ -758,30 +1065,35 @@
             if(riskBadge){ if(hour>=10 && hour<=15) riskBadge.innerHTML = " Fire Danger: HIGH"; else if(hour>=18 || hour<=5) riskBadge.innerHTML = " Fire Danger: LOW"; else riskBadge.innerHTML = " Fire Danger: MODERATE"; }
         }
         setInterval(updateClock,1000); updateClock();
+        
         function triggerFireEmergency(){
-            if(alertCooldown) { if(fireStatusDiv) fireStatusDiv.innerHTML = `<span></span><span>Alert already dispatching...</span>`; return; }
+            if(alertCooldown) { if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>Alert already dispatching...</span>`; return; }
             alertCooldown = true; if(navigator.vibrate) navigator.vibrate([400,200,400]);
             const container = document.querySelector('.glass-card'); if(container){ container.classList.add('critical-glow'); setTimeout(()=>container.classList.remove('critical-glow'),700); }
-            if(fireStatusDiv) fireStatusDiv.innerHTML = `<span></span><span>KAKAMPI FIRE ALERT! Notifying Responders...</span>`;
-            addKakampiLog("FIRE ALERT", `Fire emergency from ${currentUser?.barangay || "Lipa City"} by ${currentUser?.username}`, "");
+            if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>KAKAMPI FIRE ALERT! Notifying Responders...</span>`;
+            addKakampiLog("FIRE ALERT", `Fire emergency from ${currentUser?.barangay || "Lipa City"} by ${currentUser?.username}`);
             setTimeout(()=>{
-                if(fireStatusDiv) fireStatusDiv.innerHTML = `<span></span><span>BFP Lipa & Responders Dispatched!</span>`;
-                addKakampiLog("DISPATCH", "Fire responders en route to location", );
+                if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>BFP Lipa & Responders Dispatched!</span>`;
+                addKakampiLog("DISPATCH", "Fire responders en route to location");
                 if(Notification.permission === "granted") new Notification("KAKAMPI FIRE ALERT", { body: `Fire reported in ${currentUser?.barangay || "Lipa City"}! Responders en route.` });
-                setTimeout(()=>{ if(fireStatusDiv) fireStatusDiv.innerHTML = `<span></span><span>KAKAMPI READY · Lipa City Fire Watch Active</span>`; alertCooldown = false; },4000);
+                setTimeout(()=>{ if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>KAKAMPI READY · Lipa City Fire Watch Active</span>`; alertCooldown = false; },4000);
             },1800);
         }
+        
         function callHotline(name, number){
-            addKakampiLog("HOTLINE", `Called ${name} (${number})`, );
+            addKakampiLog("HOTLINE", `Called ${name} (${number})`);
             const prevStatus = fireStatusDiv.innerHTML;
-            if(fireStatusDiv) fireStatusDiv.innerHTML = `<span></span><span>Calling ${name} (${number})...</span>`;
-            setTimeout(()=>{ alert(`KAKAMPI FIRE ASSISTANCE\nCalling ${name} - ${number}\nLocation: ${currentUser?.barangay || "Lipa City"}`); if(fireStatusDiv) fireStatusDiv.innerHTML = prevStatus; addKakampiLog("CALL PLACED", `Call completed to ${name}`, ); if(navigator.vibrate) navigator.vibrate(100); },400);
+            if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>Calling ${name} (${number})...</span>`;
+            setTimeout(()=>{ alert(`KAKAMPI FIRE ASSISTANCE\nCalling ${name} - ${number}\nLocation: ${currentUser?.barangay || "Lipa City"}`); if(fireStatusDiv) fireStatusDiv.innerHTML = prevStatus; addKakampiLog("CALL PLACED", `Call completed to ${name}`); if(navigator.vibrate) navigator.vibrate(100); },400);
         }
+        
         if(fireAlertBtn) fireAlertBtn.onclick = (e)=>{ e.preventDefault(); triggerFireEmergency(); };
         document.querySelectorAll('.hotline-card').forEach(card=>{ card.onclick = ()=>callHotline(card.getAttribute('data-name'), card.getAttribute('data-number')); });
         if(clearLogBtn) clearLogBtn.onclick = ()=>clearIncidentDatabase();
         if("Notification" in window && Notification.permission === "default") setTimeout(()=>Notification.requestPermission(),2000);
-        addKakampiLog("SESSION START", `${currentUser?.role} ${currentUser?.username} logged in from ${currentUser?.barangay}`, "");
+        addKakampiLog("SESSION START", `${currentUser?.role} ${currentUser?.username} logged in from ${currentUser?.barangay}`);
+        
+        setupClickableStats();
     }
     
     const authContainer = document.getElementById('authContainer');
@@ -791,6 +1103,7 @@
     const showLoginBtn = document.getElementById('showLoginBtn');
     const showRegisterBtn = document.getElementById('showRegisterBtn');
     const switchToLogin = document.getElementById('switchToLogin');
+    
     showLoginBtn.onclick = ()=>{ showLoginBtn.classList.add('active'); showRegisterBtn.classList.remove('active'); loginPanel.style.display='block'; registerPanel.style.display='none'; };
     showRegisterBtn.onclick = ()=>{ showRegisterBtn.classList.add('active'); showLoginBtn.classList.remove('active'); loginPanel.style.display='none'; registerPanel.style.display='block'; };
     if(switchToLogin) switchToLogin.onclick = ()=>showLoginBtn.click();
@@ -810,6 +1123,7 @@
             initMainApp();
         } else { errorDiv.innerHTML = "Invalid username or password. Please register."; }
     }
+    
     function doRegister(){
         const fullname = document.getElementById('regFullname').value.trim(), username = document.getElementById('regUsername').value.trim(), password = document.getElementById('regPassword').value.trim(), barangay = document.getElementById('regBarangay').value.trim(), role = document.getElementById('regRole').value, contact = document.getElementById('regContact').value.trim();
         const errorDiv = document.getElementById('registerErrorMsg');
@@ -822,11 +1136,13 @@
         document.getElementById('regFullname').value=''; document.getElementById('regUsername').value=''; document.getElementById('regPassword').value=''; document.getElementById('regBarangay').value=''; document.getElementById('regContact').value='';
         setTimeout(()=>{ showLoginBtn.click(); errorDiv.innerHTML = ""; errorDiv.style.background="#fee2e2"; errorDiv.style.color="#b91c1c"; },2000);
     }
+    
     document.getElementById('doLoginBtn').onclick = doLogin;
     document.getElementById('doRegisterBtn').onclick = doRegister;
     document.getElementById('loginUsername').addEventListener('keypress', e=>{ if(e.key==='Enter') doLogin(); });
     document.getElementById('loginPassword').addEventListener('keypress', e=>{ if(e.key==='Enter') doLogin(); });
-    document.getElementById('logoutBtn')?.addEventListener('click',()=>{ if(currentUser) addKakampiLog("SESSION END", `User ${currentUser.username} logged out`); currentUser=null; authContainer.style.display='block'; mainApp.style.display='none'; document.getElementById('loginUsername').value=""; document.getElementById('loginPassword').value=""; document.getElementById('loginErrorMsg').innerHTML=""; });
+    document.getElementById('logoutBtn')?.addEventListener('click',()=>{ if(currentUser) addKakampiLog("SESSION END", `User ${currentUser.username} logged out`, "🔚"); currentUser=null; authContainer.style.display='block'; mainApp.style.display='none'; document.getElementById('loginUsername').value=""; document.getElementById('loginPassword').value=""; document.getElementById('loginErrorMsg').innerHTML=""; });
+    
     initDatabase(); updateStats();
     
     // Manual overlay controls
@@ -839,4 +1155,3 @@
 </script>
 </body>
 </html>
-```
