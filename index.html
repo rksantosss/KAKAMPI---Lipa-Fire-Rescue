@@ -1,1157 +1,1121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>Kakampi · Lipa City Fire Rescue | Bright Edition + Clickable Stats</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=1.0">
+  <title>Kakampi · Lipa City Fire Rescue | Admin + CSV Import/Export</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f97316 0%, #dc2626 50%, #b91c1c 100%);
-            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Roboto', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            position: relative;
-        }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f97316 0%, #dc2626 50%, #b91c1c 100%);
+      font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
 
-        .glass-card {
-            max-width: 600px;
-            width: 100%;
-            background: rgba(255, 248, 225, 0.96);
-            backdrop-filter: blur(8px);
-            border-radius: 2rem;
-            padding: 28px 24px 32px;
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 200, 0.8);
-            border: 2px solid #ffdd99;
-            transition: all 0.2s ease;
-            margin: 0 auto;
-        }
+    .glass-card {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255, 248, 225, 0.96);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      padding: 28px 24px 32px;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+      border: 2px solid #ffdd99;
+      margin: 0 auto;
+      max-height: 95vh;
+      overflow-y: auto;
+    }
 
-        /* Auth Toggle Buttons */
-        .auth-toggle {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 28px;
-            background: #ffedd5;
-            border-radius: 60px;
-            padding: 4px;
-            border: 1px solid #fdba74;
-        }
-        .toggle-btn {
-            flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            border-radius: 60px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #9a3412;
-            text-align: center;
-        }
-        .toggle-btn.active {
-            background: radial-gradient(circle at 30% 20%, #ff8c42, #e65c1e);
-            color: white;
-            box-shadow: 0 4px 12px rgba(249,115,22,0.5);
-        }
+    .auth-toggle {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      background: #ffedd5;
+      border-radius: 60px;
+      padding: 4px;
+      border: 1px solid #fdba74;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      border: none;
+      border-radius: 60px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #9a3412;
+    }
+    .toggle-btn.active {
+      background: radial-gradient(circle at 30% 20%, #ff8c42, #e65c1e);
+      color: white;
+      box-shadow: 0 4px 12px rgba(249,115,22,0.5);
+    }
 
-        .login-container, .register-container {
-            text-align: center;
-            width: 100%;
-        }
-        .register-container {
-            display: none;
-        }
-        .logo-icon {
-            font-size: 3.2rem;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .login-title {
-            font-size: 2rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ea580c, #dc2626, #f97316);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 4px;
-            text-align: center;
-            letter-spacing: -0.5px;
-        }
-        .sub {
-            color: #b45309;
-            font-size: 0.75rem;
-            margin-bottom: 28px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .input-group {
-            margin-bottom: 18px;
-            text-align: left;
-            width: 100%;
-        }
-        .input-group label {
-            display: block;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #c2410c;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 14px 16px;
-            background: #fff7ed;
-            border: 2px solid #fdba74;
-            border-radius: 60px;
-            font-size: 1rem;
-            color: #431407;
-            outline: none;
-            transition: 0.2s;
-            font-weight: 500;
-        }
-        .input-group input:focus, .input-group select:focus {
-            border-color: #f97316;
-            box-shadow: 0 0 0 3px #fed7aa;
-        }
-        .login-btn, .register-btn {
-            width: 100%;
-            padding: 14px;
-            background: radial-gradient(circle at 30% 20%, #f97316, #dc2626);
-            border: none;
-            border-radius: 60px;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-top: 12px;
-            transition: 0.1s;
-            text-align: center;
-            box-shadow: 0 6px 14px rgba(220,38,38,0.3);
-        }
-        .login-btn:active, .register-btn:active { transform: scale(0.97); }
-        .error-msg, .register-error-msg {
-            color: #b91c1c;
-            font-size: 0.75rem;
-            margin-top: 16px;
-            background: #fee2e2;
-            padding: 8px;
-            border-radius: 50px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .success-msg {
-            color: #15803d;
-            background: #dcfce7;
-        }
-        .demo-hint {
-            margin-top: 24px;
-            background: #ffedd5;
-            padding: 12px;
-            border-radius: 28px;
-            font-size: 0.7rem;
-            color: #9a3412;
-            text-align: center;
-            font-weight: 600;
-            border: 1px solid #fed7aa;
-        }
-        .switch-link {
-            margin-top: 20px;
-            font-size: 0.75rem;
-            color: #ea580c;
-            text-align: center;
-            font-weight: 600;
-        }
-        .switch-link span {
-            color: #dc2626;
-            text-decoration: underline;
-            cursor: pointer;
-            font-weight: 800;
-        }
+    .login-container, .register-container {
+      text-align: center;
+      width: 100%;
+    }
+    .register-container { display: none; }
+    .login-title {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #ea580c, #dc2626, #f97316);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .sub {
+      color: #b45309;
+      font-size: 0.75rem;
+      margin-bottom: 28px;
+      font-weight: 600;
+    }
+    .input-group {
+      margin-bottom: 18px;
+      text-align: left;
+      width: 100%;
+    }
+    .input-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #c2410c;
+      margin-bottom: 6px;
+    }
+    .input-group input, .input-group select {
+      width: 100%;
+      padding: 14px 16px;
+      background: #fff7ed;
+      border: 2px solid #fdba74;
+      border-radius: 60px;
+      font-size: 1rem;
+      color: #431407;
+      outline: none;
+    }
+    .login-btn, .register-btn, .admin-btn, .action-btn {
+      width: 100%;
+      padding: 14px;
+      background: radial-gradient(circle at 30% 20%, #f97316, #dc2626);
+      border: none;
+      border-radius: 60px;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 12px;
+      box-shadow: 0 6px 14px rgba(220,38,38,0.3);
+      transition: 0.2s;
+    }
+    .action-btn:hover {
+      background: radial-gradient(circle at 30% 20%, #fb923c, #e6451c);
+      transform: scale(1.01);
+    }
+    .action-btn:active {
+      transform: scale(0.97);
+    }
+    .error-msg {
+      color: #b91c1c;
+      font-size: 0.75rem;
+      margin-top: 16px;
+      background: #fee2e2;
+      padding: 8px;
+      border-radius: 50px;
+      font-weight: bold;
+    }
+    .success-msg {
+      color: #15803d;
+      background: #dcfce7;
+      padding: 8px;
+      border-radius: 50px;
+      font-weight: bold;
+    }
+    .demo-hint {
+      margin-top: 24px;
+      background: #ffedd5;
+      padding: 12px;
+      border-radius: 28px;
+      font-size: 0.7rem;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
+    }
 
-        /* Main App */
-        .main-app {
-            display: none;
-            width: 100%;
-        }
-        .kakampi-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #fdba74;
-        }
-        .city-title h2 {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: #c2410c;
-        }
-        .city-title p {
-            font-size: 0.65rem;
-            color: #ea580c;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-        .kakampi-badge {
-            background: #fed7aa;
-            color: #9a3412;
-            padding: 6px 14px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            border: 1px solid #fdba74;
-        }
-        .user-info-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            background: #ffedd5;
-            padding: 8px 16px;
-            border-radius: 60px;
-            border: 1px solid #fed7aa;
-        }
-        .user-badge {
-            font-size: 0.8rem;
-            color: #b45309;
-            font-weight: 700;
-        }
-        .logout-btn {
-            background: none;
-            border: none;
-            color: #dc2626;
-            font-size: 0.7rem;
-            text-decoration: underline;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .role-badge {
-            display: inline-block;
-            background: #f97316;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.6rem;
-            margin-left: 6px;
-            color: white;
-            font-weight: bold;
-        }
-        .live-panel {
-            background: #fff7ed;
-            border-radius: 60px;
-            padding: 10px 18px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.8rem;
-            border-left: 8px solid #f97316;
-            border-right: 1px solid #fed7aa;
-        }
-        .location-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #9a3412;
-            font-weight: 800;
-        }
-        .fire-risk {
-            background: #fee2e2;
-            padding: 4px 14px;
-            border-radius: 32px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            color: #b91c1c;
-        }
-        .live-clock {
-            font-family: monospace;
-            background: #fef3c7;
-            padding: 4px 12px;
-            border-radius: 32px;
-            font-weight: 800;
-            color: #dc2626;
-        }
-        .fire-sos-area {
-            display: flex;
-            justify-content: center;
-            margin: 10px 0 20px;
-        }
-        .fire-core {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .fire-alert-btn {
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            border: none;
-            background: radial-gradient(circle at 35% 30%, #ff7b2c, #e6451c);
-            color: white;
-            font-size: 58px;
-            font-weight: 900;
-            letter-spacing: 4px;
-            cursor: pointer;
-            box-shadow: 0 0 50px rgba(249, 115, 22, 0.8), 0 8px 20px rgba(0,0,0,0.3);
-            transition: transform 0.1s ease;
-            font-family: 'Inter', sans-serif;
-            text-shadow: 0 2px 12px black;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.2;
-        }
-        .fire-alert-btn small { font-size: 0.85rem; margin-top: 8px; }
-        .fire-alert-btn:active { transform: scale(0.94); }
-        .flame-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            background: rgba(249, 115, 22, 0.5);
-            pointer-events: none;
-            animation: flameRadar 1.6s infinite;
-            z-index: 1;
-        }
-        .flame-ring.delay { animation: flameRadar 1.6s infinite 0.6s; opacity: 0.6; }
-        @keyframes flameRadar {
-            0% { width: 260px; height: 260px; opacity: 0.9; background: rgba(249, 115, 22, 0.7);}
-            100% { width: 400px; height: 400px; opacity: 0; background: rgba(220, 38, 38, 0);}
-        }
-        .alert-feedback {
-            background: #fff7ed;
-            border-radius: 48px;
-            padding: 14px 18px;
-            margin: 5px 0 20px;
-            text-align: center;
-            border: 1px solid #fed7aa;
-        }
-        #fireStatusMsg {
-            font-size: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            color: #c2410c;
-            text-align: center;
-        }
-        .hotlines-grid {
-            background: #fff7ed;
-            border-radius: 2rem;
-            padding: 16px 14px;
-            margin: 18px 0 14px;
-            border: 1px solid #fed7aa;
-        }
-        .section-badge {
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-align: center;
-            color: #ea580c;
-            margin-bottom: 14px;
-        }
-        .contact-flex {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-        }
-        .hotline-card {
-            background: #fef3c7;
-            padding: 10px 12px;
-            border-radius: 80px;
-            min-width: 110px;
-            text-align: center;
-            border: 2px solid #fdba74;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-        .hotline-card:active { background: #fed7aa; transform: scale(0.97);}
-        .hotline-name { font-weight: 900; font-size: 0.85rem; color: #c2410c; }
-        .hotline-number { font-family: monospace; font-size: 1rem; font-weight: bold; color: #9a3412; margin-top: 4px; }
-        .incident-log {
-            margin-top: 20px;
-            background: #fff7ed;
-            border-radius: 1.8rem;
-            padding: 12px 14px;
-            border: 1px solid #fed7aa;
-        }
-        .log-header { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
-        .log-title { font-size: 0.75rem; font-weight: 800; color: #ea580c; }
-        .clear-log { background: none; border: none; color: #dc2626; font-size: 0.7rem; text-decoration: underline; cursor: pointer; font-weight: bold; }
-        #fireHistoryList {
-            list-style: none;
-            max-height: 145px;
-            overflow-y: auto;
-            font-size: 0.7rem;
-        }
-        #fireHistoryList li { padding: 7px 0; border-bottom: 1px solid #fed7aa; display: flex; gap: 8px; font-family: monospace; color: #78350f; }
-        .log-time { color: #f97316; min-width: 68px; font-weight: bold; }
-        
-        /* Clickable Stats Styles */
-        .db-stats {
-            background: #ffedd5;
-            border-radius: 20px;
-            padding: 8px 12px;
-            margin-top: 12px;
-            font-size: 0.65rem;
-            display: flex;
-            justify-content: space-between;
-            color: #b45309;
-            font-weight: bold;
-        }
-        
-        .db-stats span {
-            cursor: pointer;
-            transition: all 0.2s ease;
-            padding: 4px 8px;
-            border-radius: 20px;
-            background: rgba(255, 237, 213, 0.5);
-        }
-        
-        .db-stats span:hover {
-            background: #fed7aa;
-            transform: scale(1.02);
-        }
-        
-        .db-stats span:active {
-            transform: scale(0.98);
-        }
-        
-        /* Stats Modal Popup */
-        .stats-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .stats-modal-content {
-            max-width: 500px;
-            width: 100%;
-            background: linear-gradient(135deg, #fff9ef 0%, #ffedd5 100%);
-            border-radius: 2rem;
-            padding: 24px;
-            border: 3px solid #fdba74;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            animation: modalSlideIn 0.3s ease;
-        }
-        
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .stats-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #fdba74;
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .stats-modal-header h3 {
-            color: #c2410c;
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
-        
-        .close-stats-modal {
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #dc2626;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        
-        .close-stats-modal:hover {
-            transform: scale(1.1);
-            color: #b91c1c;
-        }
-        
-        .stats-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .stats-item {
-            background: white;
-            border-radius: 1rem;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            border-left: 6px solid #f97316;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        
-        .stats-item-title {
-            font-weight: 800;
-            color: #9a3412;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-        
-        .stats-item-detail {
-            font-size: 0.75rem;
-            color: #78350f;
-            font-family: monospace;
-            word-break: break-word;
-        }
-        
-        .stats-badge {
-            display: inline-block;
-            background: #f97316;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            margin-left: 8px;
-        }
-        
-        .empty-stats {
-            text-align: center;
-            color: #b45309;
-            padding: 40px;
-            font-style: italic;
-        }
-        
-        .stats-footer {
-            margin-top: 20px;
-            padding-top: 12px;
-            border-top: 1px solid #fdba74;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #9a3412;
-        }
-        
-        .kakampi-footer {
-            text-align: center;
-            font-size: 0.6rem;
-            color: #c2410c;
-            margin-top: 20px;
-            padding-top: 12px;
-            border-top: 1px dashed #fdba74;
-            font-weight: 600;
-        }
-        /* MANUAL BUTTON & PANEL */
-        .manual-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #f97316;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 18px;
-            font-weight: bold;
-            color: white;
-            font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            cursor: pointer;
-            z-index: 100;
-            font-family: monospace;
-            transition: 0.2s;
-        }
-        .manual-btn:hover { background: #dc2626; transform: scale(1.02);}
-        .manual-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(6px);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .manual-card {
-            max-width: 520px;
-            width: 100%;
-            background: #fff9ef;
-            border-radius: 2rem;
-            padding: 24px;
-            border: 3px solid #fdba74;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.5);
-        }
-        .manual-card h2 {
-            color: #c2410c;
-            border-left: 8px solid #f97316;
-            padding-left: 16px;
-            margin-bottom: 16px;
-        }
-        .manual-card h3 {
-            margin: 18px 0 6px 0;
-            color: #b45309;
-        }
-        .manual-card p, .manual-card li {
-            font-size: 0.85rem;
-            color: #431407;
-            line-height: 1.4;
-        }
-        .manual-card ul {
-            padding-left: 24px;
-            margin: 8px 0;
-        }
-        .close-manual {
-            background: #dc2626;
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-weight: bold;
-            margin-top: 20px;
-            cursor: pointer;
-            width: 100%;
-        }
-        @media (max-width: 500px) {
-            .fire-alert-btn { width: 200px; height: 200px; font-size: 44px; }
-            .flame-ring { width: 220px; height: 220px; }
-            @keyframes flameRadar { 0% { width: 210px; height: 210px; } 100% { width: 310px; height: 310px; } }
-            .hotline-card { min-width: 95px; padding: 7px 6px; }
-            .manual-btn { bottom: 12px; right: 12px; padding: 8px 14px; font-size: 0.8rem; }
-        }
-        .critical-glow { animation: emergencyFlash 0.5s ease-in-out 2; }
-        @keyframes emergencyFlash { 0% { box-shadow: 0 0 0 0 #ff8c42; } 50% { box-shadow: 0 0 0 12px rgba(249, 115, 22, 0.7); } 100% { box-shadow: 0 0 0 0 #ff8c42; } }
-    </style>
+    .main-app, .admin-dashboard {
+      display: none;
+      width: 100%;
+    }
+    .user-info-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      background: #ffedd5;
+      padding: 8px 16px;
+      border-radius: 60px;
+    }
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #dc2626;
+      font-size: 0.7rem;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .role-badge {
+      display: inline-block;
+      background: #f97316;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.6rem;
+      margin-left: 6px;
+      color: white;
+    }
+    .fire-alert-btn {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: none;
+      background: radial-gradient(circle at 35% 30%, #ff7b2c, #e6451c);
+      color: white;
+      font-size: 48px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(249, 115, 22, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    .hotline-card {
+      background: #fef3c7;
+      padding: 10px 12px;
+      border-radius: 80px;
+      text-align: center;
+      border: 2px solid #fdba74;
+      cursor: pointer;
+      min-width: 100px;
+    }
+    .incident-log {
+      background: #fff7ed;
+      border-radius: 1.8rem;
+      padding: 12px;
+      margin-top: 20px;
+    }
+    #fireHistoryList {
+      list-style: none;
+      max-height: 120px;
+      overflow-y: auto;
+      font-size: 0.7rem;
+      font-family: monospace;
+    }
+
+    /* ADMIN TABLE STYLES */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 16px 0;
+      font-size: 0.7rem;
+    }
+    .data-table th {
+      background: #f97316;
+      color: white;
+      padding: 10px 6px;
+      font-weight: 700;
+      text-align: left;
+    }
+    .data-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #fed7aa;
+      color: #431407;
+    }
+    .table-container {
+      max-height: 280px;
+      overflow-y: auto;
+      border-radius: 16px;
+      border: 2px solid #fdba74;
+    }
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .stats-badge {
+      background: #f97316;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+    }
+    .button-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .button-group button {
+      flex: 1;
+      min-width: 100px;
+      font-size: 0.75rem;
+      padding: 10px 8px;
+    }
+    #csvFileInput {
+      display: none;
+    }
+    .import-status {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      text-align: center;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #c2410c;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body {
+        background: white !important;
+        padding: 0 !important;
+      }
+      .glass-card {
+        box-shadow: none !important;
+        border: none !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 20px !important;
+        background: white !important;
+      }
+      .admin-header, .button-group, .logout-btn, #adminLogoutBtn, #clearAllDataBtn, 
+      .auth-toggle, .demo-hint, .error-msg, button, #csvFileInput, .import-status, .section-label {
+        display: none !important;
+      }
+      .data-table th {
+        background: #f97316 !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .data-table td, .data-table th {
+        border: 1px solid #ccc !important;
+      }
+      .table-container {
+        max-height: none !important;
+        overflow: visible !important;
+        border: none !important;
+      }
+      h2, h3 {
+        color: #000 !important;
+      }
+      .print-only-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .print-only-header h1 {
+        font-size: 24px;
+        color: #c2410c;
+      }
+      .print-only-header p {
+        font-size: 14px;
+        color: #666;
+      }
+    }
+    .print-only-header {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-
-<button class="manual-btn" id="openManualBtn"> USER MANUAL</button>
-<div id="manualOverlay" class="manual-overlay">
-    <div class="manual-card">
-        <h2> KAKAMPI · Lipa Fire Rescue</h2>
-        <p><strong>USER MANUAL - How to use the system</strong></p>
-        <h3> 1. Getting Started (Login / Register)</h3>
-        <p>On launch you see authentication panel. Use demo accounts or register new.</p>
-        <ul>
-            <li><strong>Resident:</strong> resident / fire123</li>
-            <li><strong>Responder:</strong> kakampi / lipafire</li>
-            <li><strong>BFP Personnel:</strong> bfp.lipa / rescue143</li>
-        </ul>
-        <p> Or click <strong>REGISTER</strong> to create your own profile (Barangay, Role, Contact). After registration, login again.</p>
-        
-        <h3> 2. Fire Emergency SOS Button</h3>
-        <p>Press the big central <strong>"KAKAMPI SOS · FIRE EMERGENCY"</strong> red button to trigger an immediate fire alert. </p>
-        <ul><li>The system logs incident, sends dispatcher notification, vibrates (if supported), shows visual pulse ring and dispatches responders. Incident appears in log.</li></ul>
-        
-        <h3> 3. Emergency Hotlines</h3>
-        <p>Tap any hotline card (BFP Lipa, CDRMMO, Police) to simulate a call. It logs the action and shows a prompt with contact details. Helpful to quickly reach official numbers.</p>
-
-        <h3> 4. Incident Log & Database</h3>
-        <p>All SOS alerts, hotline calls, login sessions and dispatches are stored in <strong>localStorage</strong> (browser). You can <strong>Clear Log</strong> button to wipe incident history. The dashboard shows total incidents and total registered users in realtime.</p>
-        
-        <h3> 5. User Role & Information</h3>
-        <p>After login, your <span style="background:#fed7aa;">badge</span> shows role (Resident/Responder/BFP Personnel) and barangay. The live panel shows real time clock and fire risk indicator (HIGH between 10am–3pm, LOW at night).</p>
-        
-        <h3> 6. Logout & Multi-Account</h3>
-        <p>Click <strong>Logout</strong> at top right to return to login screen. Multiple users can register and each action identifies the user's role and barangay in incident records.</p>
-
-        <h3> 7. Tips & Notifications</h3>
-        <ul>
-            <li>Browser may ask permission for desktop notifications - allow for real-time alert popups.</li>
-            <li>All data persists even after page refresh (demo database).</li>
-            <li>Use SOS only for actual emergencies practice; system logs timestamp with details.</li>
-        </ul>
-        <button class="close-manual" id="closeManualBtn">CLOSE MANUAL</button>
-    </div>
-</div>
-
 <!-- AUTH CONTAINER -->
 <div id="authContainer" class="glass-card">
-    <div class="auth-toggle">
-        <button class="toggle-btn active" id="showLoginBtn"> LOGIN</button>
-        <button class="toggle-btn" id="showRegisterBtn"> REGISTER</button>
-    </div>
-    
-    <div id="loginPanel" class="login-container">
-        <div class="login-title">KAKAMPI</div>
-        <div class="sub">Lipa City Fire Emergency Response & Alert System</div>
-        <div class="sub">"Kaagapay at Kampanya para sa Ligtas na Lipa"</div>
-        <div class="input-group">
-            <label> USERNAME</label>
-            <input type="text" id="loginUsername" placeholder="Enter your username" autocomplete="off">
-        </div>
-        <div class="input-group">
-            <label> PASSWORD</label>
-            <input type="password" id="loginPassword" placeholder="********">
-        </div>
-        <button class="login-btn" id="doLoginBtn"> LOGIN TO KAKAMPI</button>
-        <div id="loginErrorMsg" class="error-msg"></div>
-        <div class="demo-hint">
-             <strong>Demo Accounts:</strong><br>
-            Resident: <strong>resident</strong> / <strong>fire123</strong><br>
-            Responder: <strong>kakampi</strong> / <strong>lipafire</strong><br>
-            BFP: <strong>bfp.lipa</strong> / <strong>rescue143</strong>
-        </div>
-    </div>
-    
-    <div id="registerPanel" class="register-container">
-        <div class="login-title">Create Account</div>
-        <div class="sub">Join Kakampi · Lipa City Fire Response Network</div>
-        <div class="input-group">
-            <label> FULL NAME</label>
-            <input type="text" id="regFullname" placeholder="e.g., Juan Dela Cruz">
-        </div>
-        <div class="input-group">
-            <label> USERNAME (for login)</label>
-            <input type="text" id="regUsername" placeholder="Choose a username">
-        </div>
-        <div class="input-group">
-            <label> PASSWORD</label>
-            <input type="password" id="regPassword" placeholder="Minimum 6 characters">
-        </div>
-        <div class="input-group">
-            <label> BARANGAY (Lipa City - Any Barangay)</label>
-            <input type="text" id="regBarangay" placeholder="e.g., Barangay Inosluban, Barangay Sabang">
-        </div>
-        <div class="input-group">
-            <label> ROLE</label>
-            <select id="regRole">
-                <option value="Resident"> Resident (Community Member)</option>
-                <option value="Responder"> Responder</option>
-                <option value="BFP Personnel"> BFP Personnel</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label> CONTACT NUMBER (Optional)</label>
-            <input type="text" id="regContact" placeholder="e.g., 09123456789">
-        </div>
-        <button class="register-btn" id="doRegisterBtn"> CREATE ACCOUNT</button>
-        <div id="registerErrorMsg" class="error-msg"></div>
-        <div class="switch-link">
-            Already have an account? <span id="switchToLogin">Login here</span>
-        </div>
-    </div>
+  <div class="auth-toggle">
+    <button class="toggle-btn active" id="showLoginBtn">LOGIN</button>
+    <button class="toggle-btn" id="showRegisterBtn">REGISTER</button>
+  </div>
+  <div id="loginPanel" class="login-container">
+    <div class="login-title">KAKAMPI</div>
+    <div class="sub">Lipa City Fire Emergency Response</div>
+    <div class="input-group"><label>USERNAME</label><input type="text" id="loginUsername" placeholder="Enter username"></div>
+    <div class="input-group"><label>PASSWORD</label><input type="password" id="loginPassword" placeholder="********"></div>
+    <button class="login-btn" id="doLoginBtn">LOGIN TO KAKAMPI</button>
+    <button class="login-btn" id="openAdminLoginBtn" style="background:#4b5563; margin-top:8px;">ADMIN LOGIN</button>
+    <div id="loginErrorMsg" class="error-msg"></div>
+    <div class="demo-hint"><strong>Demo:</strong> juan.dela.cruz / firesafe1 | maria.clara / rescuePH2<br><strong>Admin:</strong> admin / admin143</div>
+  </div>
+  <div id="registerPanel" class="register-container">
+    <div class="login-title">Create Account</div>
+    <div class="input-group"><label>FULL NAME</label><input type="text" id="regFullname" placeholder="Juan Dela Cruz"></div>
+    <div class="input-group"><label>USERNAME</label><input type="text" id="regUsername" placeholder="Choose username"></div>
+    <div class="input-group"><label>PASSWORD</label><input type="password" id="regPassword" placeholder="Min 6 chars"></div>
+    <div class="input-group"><label>BARANGAY</label><input type="text" id="regBarangay" placeholder="Barangay Inosluban"></div>
+    <div class="input-group"><label>ROLE</label><select id="regRole"><option value="Resident">Resident</option><option value="Responder">Responder</option><option value="BFP Personnel">BFP Personnel</option></select></div>
+    <div class="input-group"><label>CONTACT</label><input type="text" id="regContact" placeholder="09123456789"></div>
+    <button class="register-btn" id="doRegisterBtn">CREATE ACCOUNT</button>
+    <div id="registerErrorMsg" class="error-msg"></div>
+  </div>
+  <div id="adminLoginPanel" style="display:none; margin-top:20px;">
+    <div class="login-title" style="font-size:1.5rem;">ADMIN ACCESS</div>
+    <div class="input-group"><label>ADMIN USERNAME</label><input type="text" id="adminUsername" placeholder="admin"></div>
+    <div class="input-group"><label>ADMIN PASSWORD</label><input type="password" id="adminPassword" placeholder="********"></div>
+    <button class="login-btn" id="doAdminLoginBtn" style="background:#4b5563;">ACCESS DASHBOARD</button>
+    <div id="adminLoginError" class="error-msg"></div>
+    <button id="backToUserLogin" style="background:none; border:none; color:#dc2626; margin-top:10px; cursor:pointer; text-decoration:underline;">Back to user login</button>
+  </div>
 </div>
 
-<!-- MAIN APPLICATION -->
+<!-- MAIN USER APP -->
 <div id="mainApp" class="glass-card main-app">
-    <div class="kakampi-header">
-        <div class="city-title">
-            <h2> KAKAMPI · LIPA FIRE RESCUE</h2>
-            <p>Browser-Based Emergency Response | Barangay Integrated</p>
-        </div>
-        <div class="kakampi-badge"> ACTIVE PROTECTOR</div>
-    </div>
-    
-    <div class="user-info-bar">
-        <span class="user-badge">  <span id="loggedUserName">Responder</span> <span id="userRoleBadge" class="role-badge"></span> |  <span id="userBarangayDisplay"></span></span>
-        <button class="logout-btn" id="logoutBtn"> Logout</button>
-    </div>
-
-    <div class="live-panel">
-        <div class="location-area"> <span id="lipaLocation">Lipa City, Batangas</span></div>
-        <div class="fire-risk" id="fireRiskBadge"> Fire Danger: MODERATE</div>
-        <div class="live-clock" id="kakampiClock">--:--:--</div>
-    </div>
-
-    <div class="fire-sos-area">
-        <div class="fire-core">
-            <button class="fire-alert-btn" id="fireAlertBtn">
-                <br>KAKAMPI SOS
-                <small>FIRE EMERGENCY</small>
-            </button>
-            <div class="flame-ring"></div>
-            <div class="flame-ring delay"></div>
-        </div>
-    </div>
-
-    <div class="alert-feedback">
-        <div id="fireStatusMsg"> <span>KAKAMPI READY · Lipa City Fire Watch Active</span></div>
-    </div>
-
-    <div class="hotlines-grid">
-        <div class="section-badge"> KAKAMPI EMERGENCY HOTLINES · TAP TO CALL</div>
-        <div class="contact-flex" id="hotlineList">
-            <div class="hotline-card" data-name="BFP Lipa" data-number="(043) 757-4618">
-                <div class="hotline-name"> BFP Lipa</div>
-                <div class="hotline-number">(043) 757-4618</div>
-            </div>
-            <div class="hotline-card" data-name="Lipa CDRMMO" data-number="(043) 756-0127">
-                <div class="hotline-name"> Lipa CDRMMO</div>
-                <div class="hotline-number">(043) 756-0127</div>
-            </div>
-            <div class="hotline-card" data-name="Lipa City Police(PNP)" data-number="(043) 702-3832">
-                <div class="hotline-name"> Lipa City Police</div>
-                <div class="hotline-number">(043) 702-3832</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="incident-log">
-        <div class="log-header">
-            <span class="log-title"> KAKAMPI INCIDENT LOG · LIPA CITY</span>
-            <button class="clear-log" id="clearFireLog"> clear log</button>
-        </div>
-        <ul id="fireHistoryList">
-            <li><span class="log-time"> system</span> <span> KAKAMPI system ready · Database connected</span></li>
-        </ul>
-    </div>
-    
-    <div class="db-stats">
-        <span id="clickableIncidents">  Total Incidents: <span id="dbIncidentCount">0</span> <span style="font-size:0.6rem;">▼</span></span>
-        <span id="clickableUsers">  Total Users: <span id="dbUserCount">0</span> <span style="font-size:0.6rem;">▼</span></span>
-    </div>
-    
-    <div class="kakampi-footer">
-         "KAKAMPI" means partner/ally — uniting Lipa City residents & responders.<br>
-         Tap SOS for fire emergencies. All actions are logged in the database.
-    </div>
+  <div class="user-info-bar">
+    <span><span id="loggedUserName"></span> <span id="userRoleBadge" class="role-badge"></span> | <span id="userBarangayDisplay"></span></span>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </div>
+  <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+    <span class="fire-risk" id="fireRiskBadge">MODERATE</span>
+    <span class="live-clock" id="kakampiClock">--:--:--</span>
+  </div>
+  <button class="fire-alert-btn" id="fireAlertBtn">KAKAMPI SOS<br><small>FIRE EMERGENCY</small></button>
+  <div style="text-align:center; margin:10px 0;" id="fireStatusMsg">KAKAMPI READY</div>
+  <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+    <div class="hotline-card" data-name="BFP Lipa" data-number="(043) 757-4618"><div>BFP Lipa</div><div>(043) 757-4618</div></div>
+    <div class="hotline-card" data-name="CDRMMO" data-number="(043) 756-0127"><div>CDRMMO</div><div>(043) 756-0127</div></div>
+    <div class="hotline-card" data-name="PNP Lipa" data-number="(043) 702-3832"><div>PNP Lipa</div><div>(043) 702-3832</div></div>
+  </div>
+  <div class="incident-log">
+    <div style="display:flex; justify-content:space-between;"><strong>INCIDENT LOG</strong><button id="clearFireLog" style="background:none; border:none; color:#dc2626; cursor:pointer;">clear</button></div>
+    <ul id="fireHistoryList"></ul>
+  </div>
+  <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:0.7rem;">
+    <span>Incidents: <span id="dbIncidentCount">0</span></span>
+    <span>Users: <span id="dbUserCount">0</span></span>
+  </div>
 </div>
 
-<!-- Stats Modal Popup -->
-<div id="statsModal" class="stats-modal">
-    <div class="stats-modal-content">
-        <div class="stats-modal-header">
-            <h3 id="statsModalTitle"> KAKAMPI Statistics</h3>
-            <button class="close-stats-modal" id="closeStatsModal">&times;</button>
-        </div>
-        <div id="statsModalBody" class="stats-list">
-            <!-- Dynamic content will be inserted here -->
-        </div>
-        <div class="stats-footer">
-            Tap outside or press ✕ to close
-        </div>
-    </div>
+<!-- ADMIN DASHBOARD -->
+<div id="adminDashboard" class="glass-card admin-dashboard" style="display:none;">
+  <div class="print-only-header">
+    <h1>KAKAMPI - Lipa City Fire Rescue</h1>
+    <p>Official Records Printout | Generated: <span id="printDate"></span></p>
+    <hr style="border: 2px solid #f97316; margin: 10px 0;">
+  </div>
+
+  <div class="admin-header">
+    <h2 style="color:#c2410c;">ADMIN DASHBOARD</h2>
+    <button class="logout-btn" id="adminLogoutBtn">Logout Admin</button>
+  </div>
+  <div style="background:#ffedd5; border-radius:20px; padding:12px; margin-bottom:16px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+    <span><strong>Total Users:</strong> <span id="adminUserCount">0</span>/30</span>
+    <span><strong>Total Incidents:</strong> <span id="adminIncidentCount">0</span></span>
+    <span><strong>Date:</strong> <span id="adminCurrentDate"></span></span>
+  </div>
+
+  <div class="section-label">CSV DATA MANAGEMENT</div>
+  <div class="button-group">
+    <button class="action-btn" id="exportUsersCsvBtn">EXPORT USERS CSV</button>
+    <button class="action-btn" id="exportIncidentsCsvBtn">EXPORT INCIDENTS CSV</button>
+    <button class="action-btn" id="exportAllCsvBtn">EXPORT ALL CSV</button>
+  </div>
+  <div class="button-group">
+    <button class="action-btn" id="importUsersCsvBtn">IMPORT USERS CSV</button>
+    <button class="action-btn" id="importIncidentsCsvBtn">IMPORT INCIDENTS CSV</button>
+    <input type="file" id="csvFileInput" accept=".csv">
+  </div>
+  <div id="importStatus" class="import-status"></div>
+
+  <div class="section-label" style="margin-top: 8px;">PRINT RECORDS</div>
+  <div class="button-group">
+    <button class="action-btn" id="printUsersBtn">PRINT USERS</button>
+    <button class="action-btn" id="printIncidentsBtn">PRINT INCIDENTS</button>
+    <button class="action-btn" id="printAllBtn">PRINT ALL</button>
+  </div>
+  
+  <h3 style="color:#b45309; margin-bottom:8px;">USER RECORDS TABLE (30 USERS)</h3>
+  <div class="table-container" id="userTableContainer">
+    <table class="data-table" id="adminUserTable">
+      <thead>
+        <tr><th>ID</th><th>Full Name</th><th>Username</th><th>Role</th><th>Barangay</th><th>Contact</th><th>Created</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  
+  <div style="margin-top:20px; background:#fff7ed; border-radius:20px; padding:12px;" id="incidentSection">
+    <strong>INCIDENT RECORDS</strong>
+    <div id="adminIncidentList" style="max-height:150px; overflow-y:auto; font-size:0.7rem; margin-top:8px;"></div>
+    <table class="data-table" id="adminIncidentTable" style="display:none; margin-top:12px;">
+      <thead>
+        <tr><th>Time</th><th>Type</th><th>Details</th><th>User</th><th>Role</th><th>Barangay</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  
+  <button id="clearAllDataBtn" class="admin-btn" style="background:#dc2626; margin-top:16px;">CLEAR ALL DATA</button>
 </div>
 
 <script>
-    // ========== LOCALSTORAGE DATABASE ==========
+  (function() {
+    // ---------- DATABASE ----------
     function initDatabase() {
-        if (!localStorage.getItem('kakampi_incidents')) localStorage.setItem('kakampi_incidents', JSON.stringify([]));
-        if (!localStorage.getItem('kakampi_users')) {
-            const defaultUsers = [
-                { id: 1, fullname: "Resident User", username: "resident", password: "fire123", barangay: "Barangay Inosluban", role: "Resident", contact: "09123456789", createdAt: new Date().toISOString() },
-                { id: 2, fullname: "Barangay Fire Aide", username: "kakampi", password: "lipafire", barangay: "Barangay Centro", role: "Responder", contact: "09234567890", createdAt: new Date().toISOString() },
-                { id: 3, fullname: "BFP Officer Lipa", username: "bfp.lipa", password: "rescue143", barangay: "Lipa Central Station", role: "BFP Personnel", contact: "09345678901", createdAt: new Date().toISOString() }
-            ];
-            localStorage.setItem('kakampi_users', JSON.stringify(defaultUsers));
-        }
-        setupModalClickOutside();
+      if (!localStorage.getItem('kakampi_incidents')) localStorage.setItem('kakampi_incidents', JSON.stringify([]));
+      if (!localStorage.getItem('kakampi_users')) {
+        const defaultUsers = [
+          { id: 1, fullname: "Juan Dela Cruz", username: "juan.dela.cruz", password: "firesafe1", barangay: "Inosluban", role: "Resident", contact: "09171234567", createdAt: new Date().toISOString() },
+          { id: 2, fullname: "Maria Clara Santos", username: "maria.clara", password: "rescuePH2", barangay: "Sabang", role: "Responder", contact: "09182345678", createdAt: new Date().toISOString() },
+          { id: 3, fullname: "Pedro Reyes", username: "pedro.reyes", password: "alert9113", barangay: "Centro", role: "BFP Personnel", contact: "09193456789", createdAt: new Date().toISOString() },
+          { id: 4, fullname: "Ana Gonzales", username: "ana.gonzales", password: "firestop4", barangay: "Mataas na Lupa", role: "Resident", contact: "09204567890", createdAt: new Date().toISOString() },
+          { id: 5, fullname: "Carlos Mendoza", username: "carlos.mendoza", password: "safetyPH5", barangay: "Balintawak", role: "Responder", contact: "09215678901", createdAt: new Date().toISOString() },
+          { id: 6, fullname: "Elena Flores", username: "elena.flores", password: "rescue6ph", barangay: "Lodlod", role: "BFP Personnel", contact: "09226789012", createdAt: new Date().toISOString() },
+          { id: 7, fullname: "Miguel Torres", username: "miguel.torres", password: "fireman7", barangay: "Inosluban", role: "Resident", contact: "09237890123", createdAt: new Date().toISOString() },
+          { id: 8, fullname: "Sofia Villanueva", username: "sofia.villanueva", password: "alertPH8", barangay: "Sabang", role: "Responder", contact: "09248901234", createdAt: new Date().toISOString() },
+          { id: 9, fullname: "Antonio Rivera", username: "antonio.rivera", password: "safety9ph", barangay: "Centro", role: "BFP Personnel", contact: "09259012345", createdAt: new Date().toISOString() },
+          { id: 10, fullname: "Isabel Aquino", username: "isabel.aquino", password: "rescue10", barangay: "Mataas na Lupa", role: "Resident", contact: "09260123456", createdAt: new Date().toISOString() },
+          { id: 11, fullname: "Roberto Diaz", username: "roberto.diaz", password: "fire111ph", barangay: "Balintawak", role: "Responder", contact: "09271234567", createdAt: new Date().toISOString() },
+          { id: 12, fullname: "Carmen Ramirez", username: "carmen.ramirez", password: "alert1212", barangay: "Lodlod", role: "BFP Personnel", contact: "09282345678", createdAt: new Date().toISOString() },
+          { id: 13, fullname: "Jose Castillo", username: "jose.castillo", password: "safety13", barangay: "Inosluban", role: "Resident", contact: "09293456789", createdAt: new Date().toISOString() },
+          { id: 14, fullname: "Luzviminda Bautista", username: "luz.bautista", password: "fire14PH", barangay: "Sabang", role: "Responder", contact: "09304567890", createdAt: new Date().toISOString() },
+          { id: 15, fullname: "Francisco Ortega", username: "francisco.ortega", password: "rescue15", barangay: "Centro", role: "BFP Personnel", contact: "09315678901", createdAt: new Date().toISOString() },
+          { id: 16, fullname: "Teresa Marquez", username: "teresa.marquez", password: "alert16ph", barangay: "Mataas na Lupa", role: "Resident", contact: "09326789012", createdAt: new Date().toISOString() },
+          { id: 17, fullname: "Andres Guerrero", username: "andres.guerrero", password: "safety17", barangay: "Balintawak", role: "Responder", contact: "09337890123", createdAt: new Date().toISOString() },
+          { id: 18, fullname: "Gloria Santiago", username: "gloria.santiago", password: "fire18PH", barangay: "Lodlod", role: "BFP Personnel", contact: "09348901234", createdAt: new Date().toISOString() },
+          { id: 19, fullname: "Ramon Fernandez", username: "ramon.fernandez", password: "rescue19", barangay: "Inosluban", role: "Resident", contact: "09359012345", createdAt: new Date().toISOString() },
+          { id: 20, fullname: "Patricia Domingo", username: "patricia.domingo", password: "alert20ph", barangay: "Sabang", role: "Responder", contact: "09360123456", createdAt: new Date().toISOString() },
+          { id: 21, fullname: "Eduardo Pascual", username: "eduardo.pascual", password: "safety21", barangay: "Centro", role: "BFP Personnel", contact: "09371234567", createdAt: new Date().toISOString() },
+          { id: 22, fullname: "Corazon Miranda", username: "corazon.miranda", password: "fire22PH", barangay: "Mataas na Lupa", role: "Resident", contact: "09382345678", createdAt: new Date().toISOString() },
+          { id: 23, fullname: "Alfredo Herrera", username: "alfredo.herrera", password: "rescue23", barangay: "Balintawak", role: "Responder", contact: "09393456789", createdAt: new Date().toISOString() },
+          { id: 24, fullname: "Rosario Estrada", username: "rosario.estrada", password: "alert24ph", barangay: "Lodlod", role: "BFP Personnel", contact: "09404567890", createdAt: new Date().toISOString() },
+          { id: 25, fullname: "Felipe Salvador", username: "felipe.salvador", password: "safety25", barangay: "Inosluban", role: "Resident", contact: "09415678901", createdAt: new Date().toISOString() },
+          { id: 26, fullname: "Imelda Morales", username: "imelda.morales", password: "fire26PH", barangay: "Sabang", role: "Responder", contact: "09426789012", createdAt: new Date().toISOString() },
+          { id: 27, fullname: "Rodrigo Villanueva", username: "rodrigo.villanueva", password: "rescue27", barangay: "Centro", role: "BFP Personnel", contact: "09437890123", createdAt: new Date().toISOString() },
+          { id: 28, fullname: "Consuelo Aguirre", username: "consuelo.aguirre", password: "alert28ph", barangay: "Mataas na Lupa", role: "Resident", contact: "09448901234", createdAt: new Date().toISOString() },
+          { id: 29, fullname: "Manuel Padilla", username: "manuel.padilla", password: "safety29", barangay: "Balintawak", role: "Responder", contact: "09459012345", createdAt: new Date().toISOString() },
+          { id: 30, fullname: "Leticia Cervantes", username: "leticia.cervantes", password: "fire30PH", barangay: "Lodlod", role: "BFP Personnel", contact: "09460123456", createdAt: new Date().toISOString() }
+        ];
+        localStorage.setItem('kakampi_users', JSON.stringify(defaultUsers));
+      }
+      if (!localStorage.getItem('admin_credentials')) {
+        localStorage.setItem('admin_credentials', JSON.stringify({ username: "admin", password: "admin143" }));
+      }
     }
+
+    function getIncidents() { return JSON.parse(localStorage.getItem('kakampi_incidents') || '[]'); }
+    function getUsers() { return JSON.parse(localStorage.getItem('kakampi_users') || '[]'); }
+    function saveIncident(inc) { const arr = getIncidents(); arr.unshift(inc); localStorage.setItem('kakampi_incidents', JSON.stringify(arr)); }
+    function saveUser(user) { const arr = getUsers(); arr.push(user); localStorage.setItem('kakampi_users', JSON.stringify(arr)); }
+    function saveAllUsers(users) { localStorage.setItem('kakampi_users', JSON.stringify(users)); }
+    function saveAllIncidents(incidents) { localStorage.setItem('kakampi_incidents', JSON.stringify(incidents)); }
     
-    function getIncidents() { return JSON.parse(localStorage.getItem('kakampi_incidents')) || []; }
-    function getUsers() { return JSON.parse(localStorage.getItem('kakampi_users')) || []; }
-    function saveIncident(incident) { const incidents = getIncidents(); incidents.unshift(incident); localStorage.setItem('kakampi_incidents', JSON.stringify(incidents)); updateStats(); }
-    function saveUser(user) { const users = getUsers(); users.push(user); localStorage.setItem('kakampi_users', JSON.stringify(users)); updateStats(); }
-    function updateStats() { if(document.getElementById('dbIncidentCount')) document.getElementById('dbIncidentCount').innerText = getIncidents().length; if(document.getElementById('dbUserCount')) document.getElementById('dbUserCount').innerText = getUsers().length; }
-    function validateUser(username, password) { return getUsers().find(u => u.username === username && u.password === password); }
-    function userExists(username) { return getUsers().some(u => u.username === username); }
-    
+    function updateStats() {
+      const incCount = getIncidents().length;
+      const userCount = getUsers().length;
+      if(document.getElementById('dbIncidentCount')) document.getElementById('dbIncidentCount').innerText = incCount;
+      if(document.getElementById('dbUserCount')) document.getElementById('dbUserCount').innerText = userCount;
+      if(document.getElementById('adminUserCount')) document.getElementById('adminUserCount').innerText = userCount;
+      if(document.getElementById('adminIncidentCount')) document.getElementById('adminIncidentCount').innerText = incCount;
+      if(document.getElementById('adminCurrentDate')) {
+        document.getElementById('adminCurrentDate').innerText = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+      }
+    }
+
     let currentUser = null;
-    let alertCooldown = false;
-    
-    function addKakampiLog(entryType, details, icon ) {
-        const timestamp = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-        const incidentRecord = { id: Date.now(), timestamp, fullDate: new Date().toLocaleString(), entryType, details, icon, user: currentUser ? currentUser.username : "system", role: currentUser ? currentUser.role : "Kakampi", barangay: currentUser ? currentUser.barangay : "Lipa City" };
-        saveIncident(incidentRecord);
-        const historyList = document.getElementById('fireHistoryList');
-        if(historyList){
-            const li = document.createElement('li');
-            li.innerHTML = `<span class="log-time">[${timestamp}]</span> <span>${icon} ${entryType}: ${details}</span>`;
-            if(historyList.firstChild) historyList.insertBefore(li, historyList.firstChild);
-            else historyList.appendChild(li);
-            while(historyList.children.length > 35) historyList.removeChild(historyList.lastChild);
-        }
+    let pendingImportType = null;
+
+    // ---------- CSV FUNCTIONS ----------
+    function convertToCSV(dataArray, headers) {
+      if (!dataArray || dataArray.length === 0) return headers.join(',') + '\n';
+      const csvRows = [];
+      csvRows.push(headers.join(','));
+      dataArray.forEach(row => {
+        const values = headers.map(header => {
+          const val = row[header] !== undefined ? row[header] : '';
+          const escaped = String(val).replace(/"/g, '""');
+          return `"${escaped}"`;
+        });
+        csvRows.push(values.join(','));
+      });
+      return csvRows.join('\n');
     }
-    
-    function loadIncidentHistory(){
-        const incidents = getIncidents();
-        const historyList = document.getElementById('fireHistoryList');
-        if(historyList){
-            historyList.innerHTML = '';
-            incidents.slice(0,30).forEach(inc => { const li = document.createElement('li'); li.innerHTML = `<span class="log-time">[${inc.timestamp}]</span> <span>${inc.icon } ${inc.entryType}: ${inc.details} (${inc.role})</span>`; historyList.appendChild(li); });
-            if(incidents.length === 0) historyList.innerHTML = '<li><span class="log-time"> system</span> <span> No past incidents. KAKAMPI ready.</span></li>';
+
+    function downloadCSV(csvContent, filename) {
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportUsersCSV() {
+      const users = getUsers();
+      const headers = ['id', 'fullname', 'username', 'password', 'barangay', 'role', 'contact', 'createdAt'];
+      const csvContent = convertToCSV(users, headers);
+      const timestamp = new Date().toISOString().slice(0, 10);
+      downloadCSV(csvContent, `kakampi_users_${timestamp}.csv`);
+      showImportStatus('Users CSV exported successfully!', 'success');
+    }
+
+    function exportIncidentsCSV() {
+      const incidents = getIncidents();
+      const headers = ['id', 'timestamp', 'fullDate', 'entryType', 'details', 'user', 'role', 'barangay'];
+      const csvContent = convertToCSV(incidents, headers);
+      const timestamp = new Date().toISOString().slice(0, 10);
+      downloadCSV(csvContent, `kakampi_incidents_${timestamp}.csv`);
+      showImportStatus('Incidents CSV exported successfully!', 'success');
+    }
+
+    function exportAllCSV() {
+      const users = getUsers();
+      const incidents = getIncidents();
+      const userHeaders = ['id', 'fullname', 'username', 'password', 'barangay', 'role', 'contact', 'createdAt'];
+      const incidentHeaders = ['id', 'timestamp', 'fullDate', 'entryType', 'details', 'user', 'role', 'barangay'];
+      
+      let csvContent = '=== USERS ===\n';
+      csvContent += convertToCSV(users, userHeaders);
+      csvContent += '\n\n=== INCIDENTS ===\n';
+      csvContent += convertToCSV(incidents, incidentHeaders);
+      
+      const timestamp = new Date().toISOString().slice(0, 10);
+      downloadCSV(csvContent, `kakampi_all_records_${timestamp}.csv`);
+      showImportStatus('All records CSV exported successfully!', 'success');
+    }
+
+    function parseCSV(csvText) {
+      const rows = [];
+      const lines = csvText.split('\n').filter(line => line.trim() !== '');
+      if (lines.length < 2) return rows;
+      
+      const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+      
+      for (let i = 1; i < lines.length; i++) {
+        const values = [];
+        let current = '';
+        let inQuotes = false;
+        
+        for (let char of lines[i]) {
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            values.push(current.replace(/^"|"$/g, '').trim());
+            current = '';
+          } else {
+            current += char;
+          }
         }
+        values.push(current.replace(/^"|"$/g, '').trim());
+        
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index] || '';
+        });
+        rows.push(row);
+      }
+      return rows;
+    }
+
+    function importUsersCSV(csvText) {
+      try {
+        const parsedUsers = parseCSV(csvText);
+        if (parsedUsers.length === 0) {
+          showImportStatus('No valid user data found in CSV file.', 'error');
+          return;
+        }
+        
+        const existingUsers = getUsers();
+        let importedCount = 0;
+        let skippedCount = 0;
+        
+        parsedUsers.forEach(parsedUser => {
+          if (!parsedUser.username || !parsedUser.password) {
+            skippedCount++;
+            return;
+          }
+          
+          const exists = existingUsers.some(u => u.username === parsedUser.username);
+          if (exists) {
+            skippedCount++;
+            return;
+          }
+          
+          if (existingUsers.length + importedCount >= 30) {
+            return;
+          }
+          
+          const newUser = {
+            id: parsedUser.id ? parseInt(parsedUser.id) : Date.now() + importedCount,
+            fullname: parsedUser.fullname || parsedUser.username,
+            username: parsedUser.username,
+            password: parsedUser.password,
+            barangay: parsedUser.barangay || 'Unknown',
+            role: parsedUser.role || 'Resident',
+            contact: parsedUser.contact || '',
+            createdAt: parsedUser.createdAt || new Date().toISOString()
+          };
+          existingUsers.push(newUser);
+          importedCount++;
+        });
+        
+        saveAllUsers(existingUsers);
         updateStats();
+        renderAdminTable();
+        showImportStatus(`Imported ${importedCount} users successfully! (${skippedCount} skipped)`, 'success');
+      } catch (error) {
+        showImportStatus('Error importing users: ' + error.message, 'error');
+      }
     }
-    
-    function clearIncidentDatabase(){ if(confirm("Clear ALL incident records?")){ localStorage.setItem('kakampi_incidents', JSON.stringify([])); loadIncidentHistory(); addKakampiLog("SYSTEM", "Incident database cleared"); } }
-    
-    // ========== CLICKABLE STATS FUNCTIONS ==========
-    function showIncidentDetails() {
-        const incidents = getIncidents();
-        const modal = document.getElementById('statsModal');
-        const modalTitle = document.getElementById('statsModalTitle');
-        const modalBody = document.getElementById('statsModalBody');
-        
-        modalTitle.innerHTML = ' INCIDENT LOG DETAILS';
-        
-        if (incidents.length === 0) {
-            modalBody.innerHTML = '<div class="empty-stats">📭 No incidents recorded yet.<br>Tap SOS to create your first incident.</div>';
-        } else {
-            let html = `<div style="margin-bottom: 12px; text-align: center; background:#fff7ed; padding:8px; border-radius:12px;">
-                            <strong>Total Incidents:</strong> ${incidents.length} 
-                            <span class="stats-badge">Active Logs</span>
-                        </div>`;
-            
-            incidents.slice(0, 20).forEach((inc, index) => {
-                html += `
-                    <div class="stats-item">
-                        <div class="stats-item-title">
-                             #${incidents.length - index} • ${inc.entryType} 
-                            <span class="stats-badge">${inc.role || 'System'}</span>
-                        </div>
-                        <div class="stats-item-detail">
-                             ${inc.timestamp} |  ${inc.barangay || 'Lipa City'}<br>
-                             ${inc.details}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            if (incidents.length > 20) {
-                html += `<div style="text-align:center; padding:12px; color:#9a3412; font-size:0.7rem;">
-                            + ${incidents.length - 20} more incidents. Check full log above.
-                        </div>`;
-            }
-            modalBody.innerHTML = html;
+
+    function importIncidentsCSV(csvText) {
+      try {
+        const parsedIncidents = parseCSV(csvText);
+        if (parsedIncidents.length === 0) {
+          showImportStatus('No valid incident data found in CSV file.', 'error');
+          return;
         }
         
-        modal.style.display = 'flex';
+        const existingIncidents = getIncidents();
+        let importedCount = 0;
+        
+        parsedIncidents.forEach(parsedIncident => {
+          const newIncident = {
+            id: parsedIncident.id ? parseInt(parsedIncident.id) : Date.now() + importedCount,
+            timestamp: parsedIncident.timestamp || new Date().toLocaleTimeString(),
+            fullDate: parsedIncident.fullDate || new Date().toLocaleString(),
+            entryType: parsedIncident.entryType || 'IMPORTED',
+            details: parsedIncident.details || 'Imported from CSV',
+            user: parsedIncident.user || 'system',
+            role: parsedIncident.role || 'System',
+            barangay: parsedIncident.barangay || 'Lipa City'
+          };
+          existingIncidents.unshift(newIncident);
+          importedCount++;
+        });
+        
+        saveAllIncidents(existingIncidents);
+        updateStats();
+        renderAdminIncidents();
+        showImportStatus(`Imported ${importedCount} incidents successfully!`, 'success');
+      } catch (error) {
+        showImportStatus('Error importing incidents: ' + error.message, 'error');
+      }
     }
-    
-    function showUserDetails() {
-        const users = getUsers();
-        const modal = document.getElementById('statsModal');
-        const modalTitle = document.getElementById('statsModalTitle');
-        const modalBody = document.getElementById('statsModalBody');
-        
-        modalTitle.innerHTML = ' REGISTERED USERS';
-        
-        if (users.length === 0) {
-            modalBody.innerHTML = '<div class="empty-stats"> No registered users yet.<br>Register a new account to get started.</div>';
-        } else {
-            let html = `<div style="margin-bottom: 12px; text-align: center; background:#fff7ed; padding:8px; border-radius:12px;">
-                            <strong>Total Users:</strong> ${users.length} 
-                            <span class="stats-badge">Registered Accounts</span>
-                        </div>`;
-            
-            const residents = users.filter(u => u.role === 'Resident');
-            const responders = users.filter(u => u.role === 'Responder');
-            const bfp = users.filter(u => u.role === 'BFP Personnel');
-            
-            html += `
-                <div style="margin-bottom: 16px;">
-                    <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
-                        <span style="background:#10b981; color:white; padding:4px 12px; border-radius:20px;"> Residents: ${residents.length}</span>
-                        <span style="background:#f59e0b; color:white; padding:4px 12px; border-radius:20px;"> Responders: ${responders.length}</span>
-                        <span style="background:#ef4444; color:white; padding:4px 12px; border-radius:20px;"> BFP: ${bfp.length}</span>
-                    </div>
-                </div>
-            `;
-            
-            users.forEach((user, index) => {
-                let roleIcon = '';
-                if (user.role === 'Resident') roleIcon ;
-                else if (user.role === 'Responder') roleIcon ;
-                else roleIcon ;
-                
-                html += `
-                    <div class="stats-item">
-                        <div class="stats-item-title">
-                            ${roleIcon} ${user.fullname || user.username}
-                            <span class="stats-badge">${user.role}</span>
-                        </div>
-                        <div class="stats-item-detail">
-                             @${user.username}<br>
-                             ${user.barangay}<br>
-                             ${user.contact || 'No contact provided'}<br>
-                             Joined: ${new Date(user.createdAt).toLocaleDateString()}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            modalBody.innerHTML = html;
-        }
-        
-        modal.style.display = 'flex';
+
+    function triggerFileImport(type) {
+      pendingImportType = type;
+      document.getElementById('csvFileInput').click();
     }
-    
-    function closeStatsModal() {
-        const modal = document.getElementById('statsModal');
-        if (modal) {
-            modal.style.display = 'none';
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const csvText = e.target.result;
+        if (pendingImportType === 'users') {
+          importUsersCSV(csvText);
+        } else if (pendingImportType === 'incidents') {
+          importIncidentsCSV(csvText);
         }
+        pendingImportType = null;
+      };
+      reader.onerror = function() {
+        showImportStatus('Error reading file.', 'error');
+        pendingImportType = null;
+      };
+      reader.readAsText(file);
+      
+      event.target.value = '';
     }
-    
-    function setupModalClickOutside() {
-        const modal = document.getElementById('statsModal');
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeStatsModal();
-                }
-            });
-        }
+
+    function showImportStatus(message, type) {
+      const statusDiv = document.getElementById('importStatus');
+      if (!statusDiv) return;
+      statusDiv.innerText = message;
+      statusDiv.className = 'import-status';
+      if (type === 'success') {
+        statusDiv.classList.add('success-msg');
+      } else if (type === 'error') {
+        statusDiv.classList.add('error-msg');
+      }
+      setTimeout(() => {
+        statusDiv.innerText = '';
+        statusDiv.className = 'import-status';
+      }, 4000);
     }
-    
-    function setupClickableStats() {
-        const incidentsSpan = document.getElementById('clickableIncidents');
-        const usersSpan = document.getElementById('clickableUsers');
-        const closeBtn = document.getElementById('closeStatsModal');
-        
-        if (incidentsSpan) {
-            incidentsSpan.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showIncidentDetails();
-            });
-        }
-        
-        if (usersSpan) {
-            usersSpan.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showUserDetails();
-            });
-        }
-        
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeStatsModal);
-        }
+
+    // ---------- ADMIN FUNCTIONS ----------
+    function renderAdminTable() {
+      const users = getUsers();
+      const tbody = document.querySelector('#adminUserTable tbody');
+      if (!tbody) return;
+      tbody.innerHTML = users.map(u => `
+        <tr>
+          <td>${u.id}</td>
+          <td>${u.fullname}</td>
+          <td>@${u.username}</td>
+          <td><span class="stats-badge">${u.role}</span></td>
+          <td>${u.barangay}</td>
+          <td>${u.contact || 'N/A'}</td>
+          <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
     }
-    
+
+    function renderAdminIncidents() {
+      const list = document.getElementById('adminIncidentList');
+      const tableBody = document.querySelector('#adminIncidentTable tbody');
+      if (!list || !tableBody) return;
+      const incidents = getIncidents();
+      
+      list.innerHTML = incidents.length ? incidents.slice(0, 20).map(i => 
+        `<div style="padding:4px 0; border-bottom:1px solid #fed7aa;">[${i.timestamp}] ${i.entryType}: ${i.details} (${i.user})</div>`
+      ).join('') : 'No incidents recorded.';
+      
+      tableBody.innerHTML = incidents.map(i => `
+        <tr>
+          <td>${i.timestamp}</td>
+          <td>${i.entryType}</td>
+          <td>${i.details}</td>
+          <td>${i.user || 'system'}</td>
+          <td>${i.role || 'N/A'}</td>
+          <td>${i.barangay || 'N/A'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function showAdminDashboard() {
+      document.getElementById('authContainer').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'none';
+      document.getElementById('adminDashboard').style.display = 'block';
+      updateStats();
+      renderAdminTable();
+      renderAdminIncidents();
+    }
+
+    function adminLogin(username, password) {
+      const creds = JSON.parse(localStorage.getItem('admin_credentials'));
+      if (creds && creds.username === username && creds.password === password) {
+        showAdminDashboard();
+        return true;
+      }
+      document.getElementById('adminLoginError').innerText = 'Invalid admin credentials.';
+      return false;
+    }
+
+    // ---------- PRINT FUNCTIONS ----------
+    function printUsers() {
+      document.getElementById('printDate').innerText = new Date().toLocaleString();
+      const incidentSection = document.getElementById('incidentSection');
+      const buttonGroups = document.querySelectorAll('.button-group');
+      const clearBtn = document.getElementById('clearAllDataBtn');
+      const adminHeader = document.querySelector('.admin-header');
+      const importStatus = document.getElementById('importStatus');
+      const sectionLabels = document.querySelectorAll('.section-label');
+      
+      if (incidentSection) incidentSection.style.display = 'none';
+      buttonGroups.forEach(g => g.style.display = 'none');
+      if (clearBtn) clearBtn.style.display = 'none';
+      if (adminHeader) adminHeader.style.display = 'none';
+      if (importStatus) importStatus.style.display = 'none';
+      sectionLabels.forEach(l => l.style.display = 'none');
+      
+      window.print();
+      
+      setTimeout(() => {
+        if (incidentSection) incidentSection.style.display = 'block';
+        buttonGroups.forEach(g => g.style.display = 'flex');
+        if (clearBtn) clearBtn.style.display = 'block';
+        if (adminHeader) adminHeader.style.display = 'flex';
+        if (importStatus) importStatus.style.display = 'block';
+        sectionLabels.forEach(l => l.style.display = 'block');
+      }, 500);
+    }
+
+    function printIncidents() {
+      document.getElementById('printDate').innerText = new Date().toLocaleString();
+      const incidentTable = document.getElementById('adminIncidentTable');
+      const incidentList = document.getElementById('adminIncidentList');
+      const userTableContainer = document.getElementById('userTableContainer');
+      const buttonGroups = document.querySelectorAll('.button-group');
+      const clearBtn = document.getElementById('clearAllDataBtn');
+      const adminHeader = document.querySelector('.admin-header');
+      const userTableTitle = document.querySelector('h3');
+      const importStatus = document.getElementById('importStatus');
+      const sectionLabels = document.querySelectorAll('.section-label');
+      
+      if (incidentTable) incidentTable.style.display = 'table';
+      if (incidentList) incidentList.style.display = 'none';
+      if (userTableContainer) userTableContainer.style.display = 'none';
+      buttonGroups.forEach(g => g.style.display = 'none');
+      if (clearBtn) clearBtn.style.display = 'none';
+      if (adminHeader) adminHeader.style.display = 'none';
+      if (userTableTitle) userTableTitle.style.display = 'none';
+      if (importStatus) importStatus.style.display = 'none';
+      sectionLabels.forEach(l => l.style.display = 'none');
+      
+      window.print();
+      
+      setTimeout(() => {
+        if (incidentTable) incidentTable.style.display = 'none';
+        if (incidentList) incidentList.style.display = 'block';
+        if (userTableContainer) userTableContainer.style.display = 'block';
+        buttonGroups.forEach(g => g.style.display = 'flex');
+        if (clearBtn) clearBtn.style.display = 'block';
+        if (adminHeader) adminHeader.style.display = 'flex';
+        if (userTableTitle) userTableTitle.style.display = 'block';
+        if (importStatus) importStatus.style.display = 'block';
+        sectionLabels.forEach(l => l.style.display = 'block');
+      }, 500);
+    }
+
+    function printAll() {
+      document.getElementById('printDate').innerText = new Date().toLocaleString();
+      const incidentTable = document.getElementById('adminIncidentTable');
+      const incidentList = document.getElementById('adminIncidentList');
+      const buttonGroups = document.querySelectorAll('.button-group');
+      const clearBtn = document.getElementById('clearAllDataBtn');
+      const adminHeader = document.querySelector('.admin-header');
+      const importStatus = document.getElementById('importStatus');
+      const sectionLabels = document.querySelectorAll('.section-label');
+      
+      if (incidentTable) incidentTable.style.display = 'table';
+      if (incidentList) incidentList.style.display = 'none';
+      buttonGroups.forEach(g => g.style.display = 'none');
+      if (clearBtn) clearBtn.style.display = 'none';
+      if (adminHeader) adminHeader.style.display = 'none';
+      if (importStatus) importStatus.style.display = 'none';
+      sectionLabels.forEach(l => l.style.display = 'none');
+      
+      window.print();
+      
+      setTimeout(() => {
+        if (incidentTable) incidentTable.style.display = 'none';
+        if (incidentList) incidentList.style.display = 'block';
+        buttonGroups.forEach(g => g.style.display = 'flex');
+        if (clearBtn) clearBtn.style.display = 'block';
+        if (adminHeader) adminHeader.style.display = 'flex';
+        if (importStatus) importStatus.style.display = 'block';
+        sectionLabels.forEach(l => l.style.display = 'block');
+      }, 500);
+    }
+
+    // ---------- USER APP ----------
+    function addLog(entryType, details) {
+      const timestamp = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+      const record = {
+        id: Date.now(), timestamp, fullDate: new Date().toLocaleString(), entryType, details,
+        user: currentUser?.username || 'system', role: currentUser?.role || 'Kakampi', barangay: currentUser?.barangay || 'Lipa City'
+      };
+      saveIncident(record);
+      const list = document.getElementById('fireHistoryList');
+      if (list) {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>[${timestamp}]</span> ${entryType}: ${details}`;
+        list.insertBefore(li, list.firstChild);
+        while (list.children.length > 25) list.removeChild(list.lastChild);
+      }
+      updateStats();
+    }
+
+    function loadHistory() {
+      const list = document.getElementById('fireHistoryList');
+      if (!list) return;
+      list.innerHTML = '';
+      getIncidents().slice(0,25).forEach(inc => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>[${inc.timestamp}]</span> ${inc.entryType}: ${inc.details}`;
+        list.appendChild(li);
+      });
+    }
+
     function initMainApp() {
-        loadIncidentHistory();
-        const fireAlertBtn = document.getElementById('fireAlertBtn');
-        const fireStatusDiv = document.getElementById('fireStatusMsg');
-        const clearLogBtn = document.getElementById('clearFireLog');
-        const clockSpan = document.getElementById('kakampiClock');
-        const riskBadge = document.getElementById('fireRiskBadge');
-        
-        function updateClock(){
-            const now = new Date(); const hrs = now.getHours().toString().padStart(2,'0'); const mins = now.getMinutes().toString().padStart(2,'0'); const secs = now.getSeconds().toString().padStart(2,'0');
-            if(clockSpan) clockSpan.textContent = `${hrs}:${mins}:${secs}`;
-            const hour = now.getHours();
-            if(riskBadge){ if(hour>=10 && hour<=15) riskBadge.innerHTML = " Fire Danger: HIGH"; else if(hour>=18 || hour<=5) riskBadge.innerHTML = " Fire Danger: LOW"; else riskBadge.innerHTML = " Fire Danger: MODERATE"; }
+      loadHistory();
+      updateStats();
+      document.getElementById('loggedUserName').innerText = currentUser.fullname;
+      document.getElementById('userRoleBadge').innerText = currentUser.role;
+      document.getElementById('userBarangayDisplay').innerText = currentUser.barangay;
+      
+      setInterval(() => {
+        document.getElementById('kakampiClock').innerText = new Date().toLocaleTimeString();
+        const h = new Date().getHours();
+        const risk = document.getElementById('fireRiskBadge');
+        if (risk) risk.innerHTML = (h>=10 && h<=15) ? 'HIGH' : (h>=18||h<=5) ? 'LOW' : 'MODERATE';
+      }, 1000);
+      
+      document.getElementById('fireAlertBtn').onclick = () => {
+        addLog('FIRE ALERT', `Emergency from ${currentUser.barangay}`);
+        document.getElementById('fireStatusMsg').innerHTML = 'DISPATCHING RESPONDERS!';
+        setTimeout(()=> document.getElementById('fireStatusMsg').innerHTML = 'KAKAMPI READY', 4000);
+      };
+      
+      document.querySelectorAll('.hotline-card').forEach(card => {
+        card.onclick = () => {
+          const name = card.dataset.name;
+          const num = card.dataset.number;
+          addLog('HOTLINE', `Called ${name} (${num})`);
+          alert(`KAKAMPI: Calling ${name} - ${num}`);
+        };
+      });
+      
+      document.getElementById('clearFireLog').onclick = () => {
+        if(confirm('Clear incident log?')) {
+          localStorage.setItem('kakampi_incidents', JSON.stringify([]));
+          loadHistory();
+          updateStats();
         }
-        setInterval(updateClock,1000); updateClock();
-        
-        function triggerFireEmergency(){
-            if(alertCooldown) { if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>Alert already dispatching...</span>`; return; }
-            alertCooldown = true; if(navigator.vibrate) navigator.vibrate([400,200,400]);
-            const container = document.querySelector('.glass-card'); if(container){ container.classList.add('critical-glow'); setTimeout(()=>container.classList.remove('critical-glow'),700); }
-            if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>KAKAMPI FIRE ALERT! Notifying Responders...</span>`;
-            addKakampiLog("FIRE ALERT", `Fire emergency from ${currentUser?.barangay || "Lipa City"} by ${currentUser?.username}`);
-            setTimeout(()=>{
-                if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>BFP Lipa & Responders Dispatched!</span>`;
-                addKakampiLog("DISPATCH", "Fire responders en route to location");
-                if(Notification.permission === "granted") new Notification("KAKAMPI FIRE ALERT", { body: `Fire reported in ${currentUser?.barangay || "Lipa City"}! Responders en route.` });
-                setTimeout(()=>{ if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>KAKAMPI READY · Lipa City Fire Watch Active</span>`; alertCooldown = false; },4000);
-            },1800);
-        }
-        
-        function callHotline(name, number){
-            addKakampiLog("HOTLINE", `Called ${name} (${number})`);
-            const prevStatus = fireStatusDiv.innerHTML;
-            if(fireStatusDiv) fireStatusDiv.innerHTML = ` <span>Calling ${name} (${number})...</span>`;
-            setTimeout(()=>{ alert(`KAKAMPI FIRE ASSISTANCE\nCalling ${name} - ${number}\nLocation: ${currentUser?.barangay || "Lipa City"}`); if(fireStatusDiv) fireStatusDiv.innerHTML = prevStatus; addKakampiLog("CALL PLACED", `Call completed to ${name}`); if(navigator.vibrate) navigator.vibrate(100); },400);
-        }
-        
-        if(fireAlertBtn) fireAlertBtn.onclick = (e)=>{ e.preventDefault(); triggerFireEmergency(); };
-        document.querySelectorAll('.hotline-card').forEach(card=>{ card.onclick = ()=>callHotline(card.getAttribute('data-name'), card.getAttribute('data-number')); });
-        if(clearLogBtn) clearLogBtn.onclick = ()=>clearIncidentDatabase();
-        if("Notification" in window && Notification.permission === "default") setTimeout(()=>Notification.requestPermission(),2000);
-        addKakampiLog("SESSION START", `${currentUser?.role} ${currentUser?.username} logged in from ${currentUser?.barangay}`);
-        
-        setupClickableStats();
+      };
     }
-    
-    const authContainer = document.getElementById('authContainer');
-    const mainApp = document.getElementById('mainApp');
-    const loginPanel = document.getElementById('loginPanel');
-    const registerPanel = document.getElementById('registerPanel');
-    const showLoginBtn = document.getElementById('showLoginBtn');
-    const showRegisterBtn = document.getElementById('showRegisterBtn');
-    const switchToLogin = document.getElementById('switchToLogin');
-    
-    showLoginBtn.onclick = ()=>{ showLoginBtn.classList.add('active'); showRegisterBtn.classList.remove('active'); loginPanel.style.display='block'; registerPanel.style.display='none'; };
-    showRegisterBtn.onclick = ()=>{ showRegisterBtn.classList.add('active'); showLoginBtn.classList.remove('active'); loginPanel.style.display='none'; registerPanel.style.display='block'; };
-    if(switchToLogin) switchToLogin.onclick = ()=>showLoginBtn.click();
-    
-    function doLogin(){
-        const username = document.getElementById('loginUsername').value.trim(), password = document.getElementById('loginPassword').value.trim();
-        const errorDiv = document.getElementById('loginErrorMsg');
-        if(!username || !password){ errorDiv.innerHTML = "Please enter username and password."; return; }
-        const user = validateUser(username, password);
-        if(user){
-            currentUser = user;
-            document.getElementById('loggedUserName').innerText = `${user.fullname || user.username}`;
-            document.getElementById('userRoleBadge').innerText = user.role;
-            document.getElementById('userBarangayDisplay').innerText = user.barangay;
-            authContainer.style.display = 'none';
-            mainApp.style.display = 'block';
-            initMainApp();
-        } else { errorDiv.innerHTML = "Invalid username or password. Please register."; }
-    }
-    
-    function doRegister(){
-        const fullname = document.getElementById('regFullname').value.trim(), username = document.getElementById('regUsername').value.trim(), password = document.getElementById('regPassword').value.trim(), barangay = document.getElementById('regBarangay').value.trim(), role = document.getElementById('regRole').value, contact = document.getElementById('regContact').value.trim();
-        const errorDiv = document.getElementById('registerErrorMsg');
-        if(!fullname || !username || !password || !barangay){ errorDiv.innerHTML = "Please fill all required fields."; return; }
-        if(password.length<6){ errorDiv.innerHTML = "Password must be at least 6 characters."; return; }
-        if(userExists(username)){ errorDiv.innerHTML = "Username already exists."; return; }
-        const newUser = { id: Date.now(), fullname, username, password, barangay, role, contact, createdAt: new Date().toISOString() };
+
+    // ---------- EVENT WIRING ----------
+    window.onload = function() {
+      initDatabase();
+      updateStats();
+      
+      document.getElementById('showLoginBtn').onclick = () => {
+        document.getElementById('showLoginBtn').classList.add('active');
+        document.getElementById('showRegisterBtn').classList.remove('active');
+        document.getElementById('loginPanel').style.display = 'block';
+        document.getElementById('registerPanel').style.display = 'none';
+        document.getElementById('adminLoginPanel').style.display = 'none';
+      };
+      document.getElementById('showRegisterBtn').onclick = () => {
+        document.getElementById('showRegisterBtn').classList.add('active');
+        document.getElementById('showLoginBtn').classList.remove('active');
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('registerPanel').style.display = 'block';
+        document.getElementById('adminLoginPanel').style.display = 'none';
+      };
+      
+      document.getElementById('doLoginBtn').onclick = () => {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        const user = getUsers().find(u => u.username === username && u.password === password);
+        if (user) {
+          currentUser = user;
+          document.getElementById('authContainer').style.display = 'none';
+          document.getElementById('mainApp').style.display = 'block';
+          initMainApp();
+        } else {
+          document.getElementById('loginErrorMsg').innerText = 'Invalid credentials.';
+        }
+      };
+      
+      document.getElementById('doRegisterBtn').onclick = () => {
+        const fullname = document.getElementById('regFullname').value.trim();
+        const username = document.getElementById('regUsername').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        const barangay = document.getElementById('regBarangay').value.trim();
+        const role = document.getElementById('regRole').value;
+        const contact = document.getElementById('regContact').value.trim();
+        if (!fullname || !username || !password || !barangay) {
+          document.getElementById('registerErrorMsg').innerText = 'Fill all required fields.';
+          return;
+        }
+        if (getUsers().length >= 30) {
+          document.getElementById('registerErrorMsg').innerText = 'Maximum 30 users reached.';
+          return;
+        }
+        if (getUsers().some(u => u.username === username)) {
+          document.getElementById('registerErrorMsg').innerText = 'Username taken.';
+          return;
+        }
+        const newUser = {
+          id: Date.now(), fullname, username, password, barangay, role, contact, createdAt: new Date().toISOString()
+        };
         saveUser(newUser);
-        errorDiv.innerHTML = " Registration successful! Please login with your credentials."; errorDiv.style.background="#dcfce7"; errorDiv.style.color="#15803d";
-        document.getElementById('regFullname').value=''; document.getElementById('regUsername').value=''; document.getElementById('regPassword').value=''; document.getElementById('regBarangay').value=''; document.getElementById('regContact').value='';
-        setTimeout(()=>{ showLoginBtn.click(); errorDiv.innerHTML = ""; errorDiv.style.background="#fee2e2"; errorDiv.style.color="#b91c1c"; },2000);
-    }
-    
-    document.getElementById('doLoginBtn').onclick = doLogin;
-    document.getElementById('doRegisterBtn').onclick = doRegister;
-    document.getElementById('loginUsername').addEventListener('keypress', e=>{ if(e.key==='Enter') doLogin(); });
-    document.getElementById('loginPassword').addEventListener('keypress', e=>{ if(e.key==='Enter') doLogin(); });
-    document.getElementById('logoutBtn')?.addEventListener('click',()=>{ if(currentUser) addKakampiLog("SESSION END", `User ${currentUser.username} logged out`, "🔚"); currentUser=null; authContainer.style.display='block'; mainApp.style.display='none'; document.getElementById('loginUsername').value=""; document.getElementById('loginPassword').value=""; document.getElementById('loginErrorMsg').innerHTML=""; });
-    
-    initDatabase(); updateStats();
-    
-    // Manual overlay controls
-    const manualOverlay = document.getElementById('manualOverlay');
-    const openManualBtn = document.getElementById('openManualBtn');
-    const closeManualBtn = document.getElementById('closeManualBtn');
-    openManualBtn.onclick = () => { manualOverlay.style.display = 'flex'; };
-    closeManualBtn.onclick = () => { manualOverlay.style.display = 'none'; };
-    manualOverlay.onclick = (e) => { if(e.target === manualOverlay) manualOverlay.style.display = 'none'; };
+        document.getElementById('registerErrorMsg').style.color = '#15803d';
+        document.getElementById('registerErrorMsg').innerText = 'Account created! Please login.';
+        setTimeout(() => {
+          document.getElementById('registerErrorMsg').innerText = '';
+          document.getElementById('showLoginBtn').click();
+        }, 1500);
+      };
+      
+      document.getElementById('logoutBtn').onclick = () => {
+        if (currentUser) addLog('SESSION', 'Logged out');
+        currentUser = null;
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('authContainer').style.display = 'block';
+      };
+      
+      document.getElementById('openAdminLoginBtn').onclick = () => {
+        document.getElementById('loginPanel').style.display = 'none';
+        document.getElementById('registerPanel').style.display = 'none';
+        document.getElementById('adminLoginPanel').style.display = 'block';
+      };
+      document.getElementById('backToUserLogin').onclick = () => {
+        document.getElementById('adminLoginPanel').style.display = 'none';
+        document.getElementById('loginPanel').style.display = 'block';
+      };
+      
+      document.getElementById('doAdminLoginBtn').onclick = () => {
+        const u = document.getElementById('adminUsername').value.trim();
+        const p = document.getElementById('adminPassword').value.trim();
+        adminLogin(u, p);
+      };
+      
+      document.getElementById('adminLogoutBtn').onclick = () => {
+        document.getElementById('adminDashboard').style.display = 'none';
+        document.getElementById('authContainer').style.display = 'block';
+        document.getElementById('adminLoginPanel').style.display = 'none';
+        document.getElementById('loginPanel').style.display = 'block';
+      };
+      
+      // CSV Export buttons
+      document.getElementById('exportUsersCsvBtn').onclick = exportUsersCSV;
+      document.getElementById('exportIncidentsCsvBtn').onclick = exportIncidentsCSV;
+      document.getElementById('exportAllCsvBtn').onclick = exportAllCSV;
+      
+      // CSV Import buttons
+      document.getElementById('importUsersCsvBtn').onclick = () => triggerFileImport('users');
+      document.getElementById('importIncidentsCsvBtn').onclick = () => triggerFileImport('incidents');
+      document.getElementById('csvFileInput').onchange = handleFileSelect;
+      
+      // Print buttons
+      document.getElementById('printUsersBtn').onclick = printUsers;
+      document.getElementById('printIncidentsBtn').onclick = printIncidents;
+      document.getElementById('printAllBtn').onclick = printAll;
+      
+      document.getElementById('clearAllDataBtn').onclick = () => {
+        if (confirm('DELETE all users and incidents? This cannot be undone.')) {
+          localStorage.setItem('kakampi_users', JSON.stringify([]));
+          localStorage.setItem('kakampi_incidents', JSON.stringify([]));
+          updateStats();
+          renderAdminTable();
+          renderAdminIncidents();
+          showImportStatus('All data cleared successfully.', 'success');
+        }
+      };
+    };
+  })();
 </script>
 </body>
 </html>
