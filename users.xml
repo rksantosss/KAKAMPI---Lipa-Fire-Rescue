@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kakampi_users>
+    <system_info>
+        <name>Kakampi · Lipa City Fire Rescue</name>
+        <version>1.0</version>
+        <storage_type>localStorage</storage_type>
+        <storage_key>kakampi_users</storage_key>
+        <total_users>3</total_users>
+        <last_updated>2024-01-01T00:00:00Z</last_updated>
+    </system_info>
+    
+    <users>
+        <user id="1">
+            <fullname>Resident User</fullname>
+            <username>resident</username>
+            <password>fire123</password>
+            <barangay>Barangay Inosluban</barangay>
+            <role>Resident</role>
+            <contact>09123456789</contact>
+            <created_at>2024-01-01T00:00:00Z</created_at>
+            <status>active</status>
+            <permissions>
+                <can_report_fire>true</can_report_fire>
+                <can_call_hotlines>true</can_call_hotlines>
+                <can_dispatch_responders>false</can_dispatch_responders>
+                <can_manage_system>false</can_manage_system>
+            </permissions>
+        </user>
+        
+        <user id="2">
+            <fullname>Lipa City Police (PNP)</fullname>
+            <username>kakampi</username>
+            <password>lipafire</password>
+            <barangay>Barangay Centro</barangay>
+            <role>Responder</role>
+            <contact>09234567890</contact>
+            <created_at>2024-01-01T00:00:00Z</created_at>
+            <status>active</status>
+            <permissions>
+                <can_report_fire>true</can_report_fire>
+                <can_call_hotlines>true</can_call_hotlines>
+                <can_dispatch_responders>true</can_dispatch_responders>
+                <can_manage_system>false</can_manage_system>
+            </permissions>
+            <response_team>
+                <team_name>Lipa City Fire Response Team</team_name>
+                <unit>Central Station</unit>
+                <equipment>
+                    <item>Fire Truck</item>
+                    <item>Rescue Equipment</item>
+                    <item>First Aid Kit</item>
+                </equipment>
+            </response_team>
+        </user>
+        
+        <user id="3">
+            <fullname>BFP Officer Lipa</fullname>
+            <username>bfp.lipa</username>
+            <password>rescue143</password>
+            <barangay>Lipa Central Station</barangay>
+            <role>BFP Personnel</role>
+            <contact>09345678901</contact>
+            <created_at>2024-01-01T00:00:00Z</created_at>
+            <status>active</status>
+            <permissions>
+                <can_report_fire>true</can_report_fire>
+                <can_call_hotlines>true</can_call_hotlines>
+                <can_dispatch_responders>true</can_dispatch_responders>
+                <can_manage_system>true</can_manage_system>
+            </permissions>
+            <bfp_details>
+                <rank>Fire Officer</rank>
+                <badge_number>BFP-LIPA-001</badge_number>
+                <station>Lipa City Central Fire Station</station>
+                <specialization>Fire Suppression and Rescue</specialization>
+            </bfp_details>
+        </user>
+    </users>
+    
+    <roles>
+        <role name="Resident">
+            <description>Community member who can report fires and access emergency services</description>
+            <access_level>1</access_level>
+            <capabilities>
+                <capability>Report fire emergencies</capability>
+                <capability>Call emergency hotlines</capability>
+                <capability>View incident logs</capability>
+                <capability>Register new account</capability>
+            </capabilities>
+        </role>
+        
+        <role name="Responder">
+            <description>First responder who can receive alerts and coordinate response efforts</description>
+            <access_level>2</access_level>
+            <capabilities>
+                <capability>All Resident capabilities</capability>
+                <capability>Receive fire alert notifications</capability>
+                <capability>Dispatch response teams</capability>
+                <capability>Update incident status</capability>
+                <capability>Access responder dashboard</capability>
+            </capabilities>
+        </role>
+        
+        <role name="BFP Personnel">
+            <description>Bureau of Fire Protection personnel with full system access</description>
+            <access_level>3</access_level>
+            <capabilities>
+                <capability>All Responder capabilities</capability>
+                <capability>Manage system settings</capability>
+                <capability>Access all incident data</capability>
+                <capability>Manage user accounts</capability>
+                <capability>Generate reports</capability>
+            </capabilities>
+        </role>
+    </roles>
+    
+    <barangays>
+        <barangay name="Barangay Inosluban">
+            <district>East District</district>
+            <population>12500</population>
+            <fire_risk_level>moderate</fire_risk_level>
+        </barangay>
+        <barangay name="Barangay Centro">
+            <district>Central District</district>
+            <population>8900</population>
+            <fire_risk_level>high</fire_risk_level>
+        </barangay>
+        <barangay name="Lipa Central Station">
+            <district>Central District</district>
+            <type>Fire Station</type>
+            <fire_risk_level>low</fire_risk_level>
+        </barangay>
+    </barangays>
+    
+    <registration_settings>
+        <minimum_password_length>6</minimum_password_length>
+        <required_fields>
+            <field>fullname</field>
+            <field>username</field>
+            <field>password</field>
+            <field>barangay</field>
+            <field>role</field>
+        </required_fields>
+        <optional_fields>
+            <field>contact</field>
+        </optional_fields>
+        <username_policy>
+            <unique>true</unique>
+            <case_sensitive>true</case_sensitive>
+            <min_length>3</min_length>
+            <max_length>20</max_length>
+        </username_policy>
+    </registration_settings>
+    
+    <validation_rules>
+        <rule field="username">
+            <required>true</required>
+            <unique>true</unique>
+            <error_message>Username already exists.</error_message>
+        </rule>
+        <rule field="password">
+            <required>true</required>
+            <min_length>6</min_length>
+            <error_message>Password must be at least 6 characters.</error_message>
+        </rule>
+        <rule field="fullname">
+            <required>true</required>
+            <error_message>Please fill all required fields.</error_message>
+        </rule>
+        <rule field="barangay">
+            <required>true</required>
+            <error_message>Please fill all required fields.</error_message>
+        </rule>
+    </validation_rules>
+</kakampi_users>
